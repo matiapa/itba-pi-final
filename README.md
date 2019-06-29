@@ -26,11 +26,12 @@ Query 4: Estación con más pasajeros por línea. Imprime estación, línea, pas
 ## TAD Propuesto
 
 Transporte
-- tlinea *lineas_list        // Lista, orden alfabetico
-- tlinea **lineas_vec        // Vector, orden descendente
+- tlinea *lineas_ord_alpha       // Este se crea en tiempo de lectura de archivos
+- tlinea *lineas_ord_desc        // Este se crea post-lectura de archivos
 - testacion *estaciones
-- int[7] pas_sem_diurnos     // Dom->Sab
-- int[7] pas_sem_diarios     // Dom->Sab
+- int cant_estaciones
+- int[7] pas_sem_diurnos         // Dom->Sab
+- int[7] pas_sem_diarios     
 - int pasajeros_totales
 
 Testacion

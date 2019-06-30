@@ -32,9 +32,9 @@ int get_cant_lineas(transporteADT trans);
 
 long int get_total_pasajeros(transporteADT trans);
 
-void get_linea(char * nombre_linea,int * pasajeros,int pos,transporteADT trans);
+void get_linea(char * nombre_linea,long int * pasajeros,int pos,transporteADT trans);
 
-void get_pasajeros_dia(int * dia,int * noche,int i,transporteADT trans);
+void get_pasajeros_dia(long int * dia,long int * noche,int i,transporteADT trans);
 
 tLinea_con_pasajeros ** get_pasajeros_por_linea_vec(transporteADT trans);
 

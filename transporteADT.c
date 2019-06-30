@@ -71,9 +71,11 @@ int get_cant_lineas(transporteADT trans);
 
 long int get_total_pasajeros(transporteADT trans);
 
-void get_linea(char * nombre_linea,int * pasajeros,int pos,transporteADT trans);
+void get_linea(char * nombre_linea,long int * pasajeros,int pos,transporteADT trans);
 
-void get_pasajeros_dia(int * dia,int * noche,int i,transporteADT trans);
+
+
+void get_pasajeros_dia(long int * dia,long int * noche,int i,transporteADT trans);
 
 
 void calcularMaxPorLineaRec(tEstacion *estacion);
@@ -84,7 +86,7 @@ tEstacion_favorita ** get_favourite_vec(transporteADT trans);
 
 //------------------------------------
 //     FUNCIONES DEL TAD
-/------------------------------------
+//------------------------------------
 
 
 transporteADT newTransporte(char *archivo_estaciones, char *archivo_molinetes){ return calloc(1, sizeof(transporteCDT)); }
@@ -235,16 +237,16 @@ long int get_total_pasajeros(transporteADT trans){return trans->pasajeros; }
 //retorna la cantidad de pasajeros total.
 
 
-void get_linea(char * nombre_linea,int * pasajeros,int pos,transporteADT trans)
+void get_linea(char * nombre_linea,long int * pasajeros,int pos,transporteADT trans)
 {
-	*nombre_linea=trans->lineas_ord_desc[pos]->nombre;
+	nombre_linea=trans->lineas_ord_desc[pos]->nombre;
 	*pasajeros=trans->lineas_ord_desc[pos]->pasajeros;
 }
 //escribe en punteros que recibe, la cantidad de pasajeros y el nombre de la linea de el i'esimo elemento del vector decenciente de las lineas de subterraneo.
 
 
 
-void get_pasajeros_dia(int * dia,int * noche,int i,transporteADT trans){
+void get_pasajeros_dia(long int * dia,long int * noche,int i,transporteADT trans){
 	*dia=trans->vec_diurno[i];
 	*noche=trans->vec_nocturno[i];
 }

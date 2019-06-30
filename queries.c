@@ -2,15 +2,9 @@
 #include "transporteADT.h"
 #define DIAS_SEMANA 7
 
-int main()
-{
-
-	
-
-}
 void query1(transporteADT trans)
 {
-	char * nombre_linea;
+	char * nombre_linea="inizialized";
         long int pasajeros;
 	int cant_lineas=get_cant_lineas(trans);
 	//conseguir cantidad de lineas de subte para saber cuantas lineas agregar al archivo.
@@ -22,7 +16,7 @@ void query1(transporteADT trans)
 	//escribir el header.
 
 	for (int i=0;i<cant_lineas;i++){
-		get_linea(&nombre_linea,&pasajeros,i,trans);
+		get_linea(nombre_linea,&pasajeros,i,trans);
 		fprintf(fptr,"%s,%ld\n", nombre_linea, pasajeros);
 		}
 	//agregar linea por linea los dats al archivo
@@ -56,7 +50,7 @@ void query2(transporteADT trans)
 }
 
 void query3(transporteADT trans){
-	tLinea_con_pasajeros ** vec=get_pasageros_por_linea_vec(trans);
+	tLinea_con_pasajeros ** vec=get_pasajeros_por_linea_vec(trans);
 	tLinea_con_pasajeros * linea;
 	//recibe vecor de punteros a estructuras con la linea y cantidad de pasajeros en cada estructura a la que apunta cada elemento del vector.
 	

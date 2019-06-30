@@ -1,13 +1,19 @@
 #include <stdio.h>
 #define DIAS_SEMANA 7
 
+
+typedef struct tEstacion_favorita
+{
+	char * nombre_estacion;
+	char * nombre_linea;
+	long int pasajeros;
+}tEstacion_favorita;
+
 int main()
 {
 
 	
-	char * nombre_linea;
-	long int pasajeros;
-	get_linea(&nommbre_linea,&pasajeros,
+
 }
 void query1(transporteADT trans)
 {
@@ -19,7 +25,7 @@ void query1(transporteADT trans)
 	FILE *fptr=fopen("./query1.csv","w");
 	//generar el archivo
 
-	for (int i=0,i<cant_lineas,i++){
+	for (int i=0;i<cant_lineas;i++){
 		get_linea(&nombre_linea,&pasajeros,i,trans);
 		fprintf(fptr,"%s,%ld\n", nombre_linea, pasajeros);
 		}
@@ -38,7 +44,7 @@ void query2(transporteADT trans)
 
 	FILE *fptr=fopen("./query2.csv","w");
 	         //generar el archivo
-	for (int i=0,i<DIAS_SEMANA,i++){
+	for (int i=0;i<DIAS_SEMANA;i++){
 		get_pasajeros_dia(&dia,&noche,i,trans);
 		fprintf(ftpr,"%s,%ld,%ld,%ld \n",dias[i],dia,noche,dia+noche);
 	}
@@ -47,6 +53,21 @@ void query2(transporteADT trans)
 	//cerrar el archivo
 }
 
-void query3(transporteADT trans){
+void query4(transporteADT trans){
+
+	//recibe un vector de estructuras con la linea, estacion y cantidad de pasajeros en cada elemento del vector.
+	tEstacion_favorita ** vec=get_favourite_vec(trans);
+	
+	
+	int cant_lineas=cant_lineas(trans);
+	//consigue la cantidad de lineas de subterraneo para saber cuantas iteraciones hacer.
+	
+
+	FILE *fptr=fopen("./query4.csv","w");
+	//generar el archivo
+	
+	for (int i=0;i<cant_lineas;i++){
+		vec[0}
+
 
 

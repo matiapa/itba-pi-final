@@ -4,70 +4,125 @@
 #include <string.h>
 #define BLOQUE 100
 
+
+//------------------------------------
+//     DEFINICION DE STRUCTS
+//------------------------------------
+
+
 typedef struct tEstacion {
-	char * nombre; /* nombre de la estacion */
-	unsigned int pasajeros; /* cantidad de pasajeros de la estacion */
-	struct tLinea * linea; /* puntero a la linea que pertenece */
+	char * nombre;
+	unsigned int pasajeros;		// Total de pasajeros
+	struct tLinea * linea; 		// Puntero a la linea que pertenece
 } tEstacion;
 
 
-/* Las lineas van a estar ordenadas en orden alfabetico */
 typedef struct tLinea {
-	char * nombre; /* nombre de la linea */
-	unsigned int pasajeros; /* cantidad de pasajeros que transitan la inea */
-	struct estacion * max; /* Puntero a la estacion con mayor pasajeros */
+	char * nombre;
+	unsigned int pasajeros;			// Total de pasajeros
+	tEstacion * max; 			// Puntero a la estacion con mas pasajeros
 	struct tLinea * next;
 } tLinea;
 
 
 typedef struct transporteCDT {
 
-	tLinea * lineas_ord_alpha;
-	tLinea * lineas_ord_desc;
+	tLinea * lineas_ord_alpha;			// Lista de líneas en orden alfabético
+	tLinea ** lineas_ord_desc;			// Vector de punteros a líneas en orden descendente (por pasajeros)
 
 	int cant_lineas;
-	tEstacion * estaciones; /* vector con todas las estaciones donde el indice es el id de la estacion */
-	unsigned int cant_estaciones; /* Cantidad de estaciones del transporte */
+	tEstacion * estaciones; 				// Vector con todas las estaciones donde el indice es el id de la estacion
+	unsigned int cant_estaciones;
 
-	unsigned int pasajeros; /* Suma de los pasajeros de todas las lineas */
-	unsigned int * vec_diurno; /* la posicion 0 es domingo, 1 lunes... */
-	unsigned int * vec_nocturno;
+	unsigned int pasajeros;					// Total de pasajeros
+	unsigned int vec_diurno[7];			// Cantidad de pasajeros por día de la semana en período diurno, la primer posición es domingo
+	unsigned int vec_nocturno[7];
 
 }transporteCDT;
 
 
-/* Crea un nuevo transporte */
-transporteADT newTransporte(char *archivo_molinetes, char *archivo_estaciones) {
+
+//------------------------------------
+//     DECLARACION DE PROTOTIPOS
+//------------------------------------
+
+
+void leerArchivos(transporteADT trans, char *archivo_estaciones, char *archivo_molinetes);
+
+void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char * nombre_estacion);
+
+tLinea * addLinea(transporteADT trans, tLinea * node, char * nombre_linea, tLinea ** dir);
+
+void addPasajero(transporteADT trans, unsigned int d, unsigned int m, unsigned int y, unsigned int hora, unsigned int id, unsigned int cant);
+
+void procesarDatos(transporteADT trans);
+
+int compararLineas(tLinea **l1, tLinea **l2);
+
+
+
+//------------------------------------
+//     FUNCIONES DEL TAD
+//------------------------------------
+
+
+transporteADT newTransporte(char *archivo_estaciones, char *archivo_molinetes) {
 
 	transporteADT trans = calloc(1, sizeof(transporteCDT));
 
-	leerEstaciones(trans, archivo_estaciones);
-	leerMolinetes(trans, archivo_molinetes);
+	leerArchivos(trans, archivo_estaciones, archivo_molinetes);
 	procesarDatos(trans);
 
 	return trans;
 }
 
 
-void leerEstaciones(transporteADT trans, char *nombre_archivo){
+void leerArchivos(transporteADT trans, char *archivo_estaciones, char *archivo_molinetes){
 
-	FILE * archEstacion = fopen(nombre_archivo, "r");
+	FILE * archEstacion = fopen(archivo_estaciones, "r");
+	FILE * archMol = fopen(archivo_molinetes, "r");
 
-	// Se saltea el encabezado
+	if (archEstacion == NULL || archMol == NULL) {
+		printf("No se pudo abrir uno de los archivos\n");
+		exit(1);
+	}
+
+	// Se saltea los encabezados
 	while (fgetc(archEstacion) != '\n');
+	while (fgetc(archMol) != '\n');
 
+
+	/* Lectura de estaciones */
 	int id; char *linea = malloc(30), *estacion = malloc(30);
+
 	while (fscanf(archEstacion, "%d,%30[^,],%30[^,\n]", &id, linea, estacion) == 3) {
-		printf("Adding: %d, %s, %s\n", id, linea, estacion);
+		//printf("Adding %d, %s, %s\n", id, linea, estacion);
 		addEstacion(trans, id, linea, estacion);
 	}
 
+	fclose(archEstacion);
+
+
+	printf("Se agregaron %d estaciones y %d lineas\n", trans->cant_estaciones, trans->cant_lineas);
+
+
+	/* Lectura de molinetes */
+	unsigned int hora, min, hrs, cant, d, m, y;
+
+	// Solo se leera la hora de finalizacion del intervalo, la de inicio no es necesaria
+	while (fscanf(archMol, "%d/%d/%d,%*[^,],%d:%d,%d,%d", &d, &m, &y, &hrs, &min, &id, &cant) == 7) {
+		hora = hrs*100 + min;
+		//printf("Adding %d/%d/%d %d:%d - %d: %d\n", d, m, y, hrs, min, id, cant);
+		addPasajero(trans, d, m, y, hora, id, cant);
+	}
+
+	fclose(archMol);
+
+	printf("Se agregaron %d pasajeros\n", trans->pasajeros);
+
 }
 
-void leerMolinetes();
 
-
-/* Agrega la etacion al transporte */
 void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char * nombre_estacion) {
 
 	/* Chequea si hay espacio en el vector de estaciones, sino lo agrega */
@@ -76,22 +131,25 @@ void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char
 
 	/* Agrega la linea y guarda el puntero a la linea de la estacion */
 	tLinea * dir = NULL;
-	trans->lineas_ord_alpha = addLinea(trans->lineas_ord_alpha, nombre_linea, &dir);
+	trans->lineas_ord_alpha = addLinea(trans, trans->lineas_ord_alpha, nombre_linea, &dir);
 
 	/* Designa los valores a la estructura de la estacion */
-	trans->estaciones[id - 1].pasajeros = 0;
-	trans->estaciones[id - 1].linea = dir;
+	trans->estaciones[id].pasajeros = 0;
+	trans->estaciones[id].linea = dir;
 
-	trans->estaciones[id - 1].nombre = malloc(strlen(nombre_estacion));
-	strcpy(trans->estaciones[id - 1].nombre, nombre_estacion);
+	trans->estaciones[id].nombre = malloc(strlen(nombre_estacion)+1);
+	strcpy(trans->estaciones[id].nombre, nombre_estacion);
 
 	trans->cant_estaciones += 1;
-	printf("Added: %d, %s, %s\n\n", id, trans->estaciones[id - 1].linea->nombre, trans->estaciones[id - 1].nombre);
+	//printf("Added: %d, %s, %s\n\n", id, trans->estaciones[id].linea->nombre, trans->estaciones[id].nombre);
 
 }
 
-/* Agrega la linea en orden alfabetico */
-tLinea * addLinea(tLinea * node, char * nombre_linea, tLinea ** dir) {
+
+tLinea * addLinea(transporteADT trans, tLinea * node, char * nombre_linea, tLinea ** dir) {
+
+	/* Agrega la linea en orden alfabetico */
+
 	int c;
 	if (node == NULL || (c = strcmp(nombre_linea, node->nombre)) < 0) {
 
@@ -113,21 +171,53 @@ tLinea * addLinea(tLinea * node, char * nombre_linea, tLinea ** dir) {
 		return node;
 	}
 
-	node->next = addLinea(node->next, nombre_linea, dir);
+	node->next = addLinea(trans, node->next, nombre_linea, dir);
 	return node;
 }
 
 
-int comparar_lineas(tLinea *l1, tLinea *l2){ return l2->pasajeros - l1->pasajeros; }
+void addPasajero(transporteADT trans, unsigned int d, unsigned int m, unsigned int y, unsigned int hora, unsigned int id, unsigned int cant) {
+
+	// Calcula el dia de la semana
+	int weekday  = (d += m < 3 ? y-- : y - 2, 23*m/9 + d + 4 + y/4- y/100 + y/400)%7;
+
+	// Si la hora esta entre las 6:00 y las 17:00 lo suma al vector diurno, sino al nocturno
+	if (hora > 6000 && hora <= 1700)
+		trans->vec_diurno[weekday] += cant;
+	else
+		trans->vec_nocturno[weekday] += cant;
+
+	// Incrementa la cantidad de pasajeros de esa estacion, linea y total
+	trans->estaciones[id].pasajeros += cant;
+	trans->estaciones[id].linea->pasajeros += cant;
+	trans->pasajeros += cant;
+
+}
+
 
 void procesarDatos(transporteADT trans){
 
 	// Primero, completa el vector con los punteros a las líneas, que están en la lista
+	trans->lineas_ord_desc = malloc(trans->cant_lineas*sizeof(tLinea *));
 	trans->lineas_ord_desc[0] = trans->lineas_ord_alpha;
 	for(int i=1; i<trans->cant_lineas; i++)
-		trans->lineas_ord_desc[i] = trans->lineas_ord_desc[i-1].next;
+		trans->lineas_ord_desc[i] = trans->lineas_ord_desc[i-1]->next;
 
 	// Luego, aplica quicksort sobre el vector
-	qsort(trans->lineas_ord_desc, trans->cant_lineas, sizeof(*tLinea), comparar_lineas);
+	qsort(trans->lineas_ord_desc, trans->cant_lineas, sizeof(tLinea *), (int (*)(const void *, const void *)) compararLineas);
 
+	// // Finalmente, calcula la maxima estacion por linea
+	for(int i=1; i<trans->cant_estaciones; i++){
+		//printf("%s %d vs %d\n", trans->estaciones[i].nombre, trans->estaciones[i].pasajeros, trans->estaciones[i].linea->max->pasajeros);
+		 if(trans->estaciones[i].linea->max == NULL || trans->estaciones[i].pasajeros > trans->estaciones[i].linea->max->pasajeros);
+		 	trans->estaciones[i].linea->max = trans->estaciones + i;
+	}
+
+	for(int i=0; i<trans->cant_lineas; i++){
+		printf("%s - Pasajeros: %d - Max: %s, %d\n", trans->lineas_ord_desc[i]->nombre, trans->lineas_ord_desc[i]->pasajeros,
+		trans->lineas_ord_desc[i]->max->nombre, trans->lineas_ord_desc[i]->max->pasajeros);
+	}
 }
+
+
+int compararLineas(tLinea **l1, tLinea **l2){	return (*l1)->pasajeros - (*l2)->pasajeros; }

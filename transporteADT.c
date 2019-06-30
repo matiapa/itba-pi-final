@@ -31,7 +31,7 @@ typedef struct transporteCDT {
 	tLinea ** lineas_ord_desc;			// Vector de punteros a líneas en orden descendente (por pasajeros)
 
 	int cant_lineas;
-	tEstacion * estaciones; 				// Vector con todas las estaciones donde el indice es el id de la estacion
+	tEstacion * estaciones; 				// Arbol binario con todas las estaciones
 	unsigned int cant_estaciones;
 
 	unsigned int pasajeros;					// Total de pasajeros
@@ -71,7 +71,8 @@ transporteADT newTransporte(char *archivo_estaciones, char *archivo_molinetes) {
 	transporteADT trans = calloc(1, sizeof(transporteCDT));
 
 	leerArchivos(trans, archivo_estaciones, archivo_molinetes);
-	procesarDatos(trans);
+	ordenarLineasDesc(trans);
+	calcularMaxPorLinea(trans->estaciones);
 
 	return trans;
 }
@@ -208,7 +209,7 @@ void addPasajero(transporteADT trans, unsigned int d, unsigned int m, unsigned i
 }
 
 
-void procesarDatos(transporteADT trans){
+void ordenarLineasDesc(transporteADT trans){
 
 	// Primero, completa el vector con los punteros a las líneas, que están en la lista
 	trans->lineas_ord_desc = malloc(trans->cant_lineas*sizeof(tLinea *));
@@ -219,18 +220,19 @@ void procesarDatos(transporteADT trans){
 	// Luego, aplica quicksort sobre el vector
 	qsort(trans->lineas_ord_desc, trans->cant_lineas, sizeof(tLinea *), (int (*)(const void *, const void *)) compararLineas);
 
+}
 
-	// Finalmente, calcula la maxima estacion por linea
-	for(int i=1; i<trans->cant_estaciones; i++){
-		//printf("%s %d vs %d\n", trans->estaciones[i].nombre, trans->estaciones[i].pasajeros, trans->estaciones[i].linea->max->pasajeros);
-		 if(trans->estaciones[i].linea->max == NULL || trans->estaciones[i].pasajeros > trans->estaciones[i].linea->max->pasajeros);
-		 	trans->estaciones[i].linea->max = trans->estaciones + i;
-	}
 
-	for(int i=0; i<trans->cant_lineas; i++){
-		printf("%s - Pasajeros: %d - Max: %s, %d\n", trans->lineas_ord_desc[i]->nombre, trans->lineas_ord_desc[i]->pasajeros,
-		trans->lineas_ord_desc[i]->max->nombre, trans->lineas_ord_desc[i]->max->pasajeros);
-	}
+void calcularMaxPorLinea(testacion *estacion){
+
+	// Hace un recorrido preorder del arbol binario, actualizando el máximo de cada línea
+
+	if(estacion->pasajeros > estacion->linea->max->pasajeros)
+		estacion->linea->max = estacion;
+
+	calcularMaxPorLinea(estacion->left);
+	calcularMaxPorLinea(estacion->right);
+
 }
 
 

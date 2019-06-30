@@ -5,6 +5,13 @@ typedef struct transporteCDT * transporteADT;
 
 transporteADT newTransporte();
 
+void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char * nombre_estacion);
+
+void addPasajero(transporteADT trans, unsigned int d, unsigned int m, unsigned int y, unsigned int hora, unsigned int id, unsigned int cant);
+
+void ordenarLineasDesc(transporteADT trans);
+void calcularMaxPorLinea(transporteADT trans);
+
 
 #endif
 

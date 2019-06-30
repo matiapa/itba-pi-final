@@ -87,7 +87,6 @@ void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char
 	trans->estaciones = addEstacionRec(trans->estaciones, id, nombre_estacion, dir_linea, &dir_est);
 	trans->cant_estaciones += 1;
 
-	printf("New dir %p\n", dir_est);
 	printf("Added: %d, %s, %s\n\n", id, dir_est->linea->nombre, dir_est->nombre);
 
 }
@@ -95,13 +94,12 @@ void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char
 
 tEstacion * addEstacionRec(tEstacion * estacion, unsigned int id, char * nombre_estacion, tLinea * dir_linea, tEstacion **dir_est) {
 
-	printf("0\n");
-
 	if (estacion == NULL) {
 
-		printf("Center\n");
-		tEstacion *new_estacion = malloc(sizeof(tEstacion));
+		tEstacion *new_estacion = calloc(1, sizeof(tEstacion));
+
 		/* Designa los valores a la estructura de la estacion */
+		new_estacion->id = id;
 		new_estacion->pasajeros = 0;
 		new_estacion->linea = dir_linea;
 
@@ -113,17 +111,14 @@ tEstacion * addEstacionRec(tEstacion * estacion, unsigned int id, char * nombre_
 
 	}
 
-	if (id < estacion->id){
-		printf("Left\n");
+	int c = id - estacion->id;
+
+	if (c<0)
 		estacion->left = addEstacionRec(estacion->left, id, nombre_estacion, dir_linea, dir_est);
-	}
 
-	if (id > estacion->id){
-		printf("Right\n");
+	if (c>0)
 		estacion->right = addEstacionRec(estacion->right, id, nombre_estacion, dir_linea, dir_est);
-	}
 
-	printf("1\n");
 	return estacion;
 
 }

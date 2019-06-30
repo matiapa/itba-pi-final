@@ -146,6 +146,19 @@ void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char
 }
 
 
+tEstacion *getEstacion(testacion *estacion, unsigned int id){
+
+	if(estacion->id == id)
+		return estacion;
+
+	if(id > estacion->id)
+		return getEstacion(estacion->right, id);
+
+	return getEstacion(estacion->left, id);
+
+}
+
+
 tLinea * addLinea(transporteADT trans, tLinea * node, char * nombre_linea, tLinea ** dir) {
 
 	/* Agrega la linea en orden alfabetico */
@@ -206,7 +219,8 @@ void procesarDatos(transporteADT trans){
 	// Luego, aplica quicksort sobre el vector
 	qsort(trans->lineas_ord_desc, trans->cant_lineas, sizeof(tLinea *), (int (*)(const void *, const void *)) compararLineas);
 
-	// // Finalmente, calcula la maxima estacion por linea
+
+	// Finalmente, calcula la maxima estacion por linea
 	for(int i=1; i<trans->cant_estaciones; i++){
 		//printf("%s %d vs %d\n", trans->estaciones[i].nombre, trans->estaciones[i].pasajeros, trans->estaciones[i].linea->max->pasajeros);
 		 if(trans->estaciones[i].linea->max == NULL || trans->estaciones[i].pasajeros > trans->estaciones[i].linea->max->pasajeros);

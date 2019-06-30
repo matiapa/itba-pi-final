@@ -10,6 +10,7 @@ int main(int argc, char **argv) {
 	}
 
 	transporteADT trans = newTransporte(argv[1], argv[2]);
+}
 
 /*
 newTransporte

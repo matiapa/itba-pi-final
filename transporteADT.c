@@ -11,9 +11,12 @@
 
 
 typedef struct tEstacion {
+	unsigned int id;
 	char * nombre;
 	unsigned int pasajeros;		// Total de pasajeros
 	struct tLinea * linea; 		// Puntero a la linea que pertenece
+	struct tEstacion * left;
+	struct tEstacion * right;
 } tEstacion;
 
 
@@ -31,7 +34,7 @@ typedef struct transporteCDT {
 	tLinea ** lineas_ord_desc;			// Vector de punteros a líneas en orden descendente (por pasajeros)
 
 	int cant_lineas;
-	tEstacion * estaciones; 				// Vector con todas las estaciones donde el indice es el id de la estacion
+	tEstacion * root;				// Vector con todas las estaciones donde el indice es el id de la estacion
 	unsigned int cant_estaciones;
 
 	unsigned int pasajeros;					// Total de pasajeros
@@ -122,6 +125,26 @@ void leerArchivos(transporteADT trans, char *archivo_estaciones, char *archivo_m
 
 }
 
+tEstacion * addArbol(tEstacion * estacion, unsigned int id, char * nombre_estacion, tLinea * dir) {
+	
+	if (estacion == NULL) {
+		tEstacion * new = calloc(1, sizeof(*estacion));
+		new->linea = dir;
+		new->id = id;
+		new->nombre = malloc(strlen(nombre_estacion)+1);
+		strcpy(new->nombre, nombre_estacion);
+		return new;
+	}
+	
+	int c = id - estacion->id;
+	if (c < 0) {
+		estacion->left = addArbol(estacion->left, id, nombre_estacion, dir);
+	}
+	if (c > 0) {
+		estacion->right = addArbol(estacion->right, id, nombre_estacion, dir);
+	}
+	return estacion;
+}
 
 void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char * nombre_estacion) {
 
@@ -134,11 +157,7 @@ void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char
 	trans->lineas_ord_alpha = addLinea(trans, trans->lineas_ord_alpha, nombre_linea, &dir);
 
 	/* Designa los valores a la estructura de la estacion */
-	trans->estaciones[id].pasajeros = 0;
-	trans->estaciones[id].linea = dir;
-
-	trans->estaciones[id].nombre = malloc(strlen(nombre_estacion)+1);
-	strcpy(trans->estaciones[id].nombre, nombre_estacion);
+	trans->root = addArbol(trans->root, id, nombre_estacion, dir);
 
 	trans->cant_estaciones += 1;
 	//printf("Added: %d, %s, %s\n\n", id, trans->estaciones[id].linea->nombre, trans->estaciones[id].nombre);

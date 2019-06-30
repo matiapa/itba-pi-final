@@ -1,6 +1,6 @@
 #include <stdio.h>
+#include "transporteADT.h"
 #define DIAS_SEMANA 7
-
 
 int main()
 {
@@ -34,7 +34,7 @@ void query1(transporteADT trans)
 }
 void query2(transporteADT trans)
 {
-	char ** dias={"domingo","lunes","martes","miercoles","jueves","viernes","sabado"};
+	char * dias[]={"domingo","lunes","martes","miercoles","jueves","viernes","sabado"};
 	long int dia,noche;
 	
 
@@ -48,7 +48,7 @@ void query2(transporteADT trans)
 
 	for (int i=0;i<DIAS_SEMANA;i++){
 		get_pasajeros_dia(&dia,&noche,i,trans);
-		fprintf(ftpr,"%s,%ld,%ld,%ld \n",dias[i],dia,noche,dia+noche);
+		fprintf(fptr,"%s,%ld,%ld,%ld \n",dias[i],dia,noche,dia+noche);
 	}
 	//agregar cada linea al archivo
 	fclose(fptr);
@@ -70,8 +70,8 @@ void query3(transporteADT trans){
 	fprintf(fptr,"Línea,Porcentaje \n");
 	// ecribir el header del archivo.
 	for (int i=0;i<cant_lineas;i++){
-		linea=vec[i]
-		fprintf(fptr,"%s,%ld% \n",linea->nombre_linea,(linea->pasajeros/total_pasajeros)*100);
+		linea=vec[i];
+		fprintf(fptr,"%s,%ld%% \n",linea->nombre_linea,(linea->pasajeros/total_pasajeros)*100);
 
 	}
 	// agrega los valores al archivo
@@ -103,7 +103,7 @@ void query4(transporteADT trans){
 	
 	for (int i=0;i<cant_lineas;i++){
 		estacion_fav=vec[i];
-		fprintf(fptr,"%s,%s,%ld \n",estacion_fav->nombre_estacion,estacon_fav->nombre_linea,estacion_fav->pasajeros);
+		fprintf(fptr,"%s,%s,%ld \n",estacion_fav->nombre_estacion,estacion_fav->nombre_linea,estacion_fav->pasajeros);
 	}
 	//agregar los valores de las estructuras al archivo, iterando en el vector
 	

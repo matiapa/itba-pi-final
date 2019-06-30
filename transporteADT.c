@@ -63,7 +63,7 @@ tEstacion *getEstacion(tEstacion *estacion, unsigned int id);
 
 void ordenarLineasDesc(transporteADT trans);
 
-void calcularMaxPorLinea(tEstacion *estacion);
+void calcularMaxPorLinea(transporteADT trans);
 
 int compararLineas(tLinea **l1, tLinea **l2);
 
@@ -71,11 +71,11 @@ int get_cant_lineas(transporteADT trans);
 
 long int get_total_pasajeros(transporteADT trans);
 
-void get_linea(char * nombre_linea,int * pasajeros,int pos,TransporteADT trans);
+void get_linea(char * nombre_linea,int * pasajeros,int pos,transporteADT trans);
 
 void get_pasajeros_dia(int * dia,int * noche,int i,transporteADT trans);
 
-tEstacion_favorita ** get_pasajeros_por_linea_vec(transporteADT trans);
+tLinea_con_pasajeros ** get_pasajeros_por_linea_vec(transporteADT trans);
 
 tEstacion_favorita ** get_favourite_vec(transporteADT trans);
 
@@ -205,7 +205,7 @@ tEstacion *getEstacion(tEstacion *estacion, unsigned int id){
 }
 
 
-void calcularMaxPorLinea(transporteADT trans){ calcularMaxPorLineaRec(trans->estacion); }
+void calcularMaxPorLinea(transporteADT trans){ calcularMaxPorLineaRec(trans->estaciones); }
 
 
 void calcularMaxPorLineaRec(tEstacion *estacion){
@@ -234,8 +234,8 @@ long int get_total_pasajeros(transporteADT trans){return trans->pasajeros; }
 
 void get_linea(char * nombre_linea,int * pasajeros,int pos,transporteADT trans)
 {
-	*nombre_linea=trans->lineas_ord_desc[i]->nombre;
-	*pasajeros=trans->lineas_ord_desc[i]->pasajeros;
+	*nombre_linea=trans->lineas_ord_desc[pos]->nombre;
+	*pasajeros=trans->lineas_ord_desc[pos]->pasajeros;
 }
 //escribe en punteros que recibe, la cantidad de pasajeros y el nombre de la linea de el i'esimo elemento del vector decenciente de las lineas de subterraneo.
 
@@ -267,7 +267,7 @@ tLinea_con_pasajeros ** get_pasajeros_por_linea_vec(transporteADT trans)
 		tLinea_con_pasajeros * pEstructura=malloc(sizeof(tLinea_con_pasajeros));
 		vec[i]=pEstructura;
 		vec[i]->nombre_linea=vec_original[i]->nombre;
-		vec[i]->pasajeros=veco_original[i]->pasajeros;
+		vec[i]->pasajeros=vec_original[i]->pasajeros;
 		//crea espacio para la estructura y transcibe los datos del TAD a una estructura que se conoce publicamente
 	}
 	return vec;

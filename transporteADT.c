@@ -75,13 +75,16 @@ void get_linea(char * nombre_linea,int * pasajeros,int pos,transporteADT trans);
 
 void get_pasajeros_dia(int * dia,int * noche,int i,transporteADT trans);
 
+
+void calcularMaxPorLineaRec(tEstacion *estacion);
+
 tLinea_con_pasajeros ** get_pasajeros_por_linea_vec(transporteADT trans);
 
 tEstacion_favorita ** get_favourite_vec(transporteADT trans);
 
 //------------------------------------
 //     FUNCIONES DEL TAD
-//------------------------------------
+/------------------------------------
 
 
 transporteADT newTransporte(char *archivo_estaciones, char *archivo_molinetes){ return calloc(1, sizeof(transporteCDT)); }

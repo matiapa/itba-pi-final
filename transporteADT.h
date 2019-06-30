@@ -4,7 +4,7 @@
 
 typedef struct transporteCDT * transporteADT;
 
-transporteADT newTransporte(char *archivo_estaciones, char *archivo_molinetes);
+transporteADT newTransporte();
 
 
 #endif

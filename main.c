@@ -1,5 +1,7 @@
 #include "transporteADT.h"
 #include "lectura.h"
+#include "queries.h"
+
 #include <stdio.h>
 
 int main(int argc, char **argv) {

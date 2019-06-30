@@ -35,7 +35,7 @@ typedef struct transporteCDT {
 	tEstacion * estaciones; 				// Arbol binario con todas las estaciones
 	unsigned int cant_estaciones;
 
-	unsigned int pasajeros;					// Total de pasajeros
+	long int pasajeros;					// Total de pasajeros
 	unsigned int vec_diurno[7];			// Cantidad de pasajeros por día de la semana en período diurno, la primer posición es domingo
 	unsigned int vec_nocturno[7];
 
@@ -58,6 +58,16 @@ int compararLineas(tLinea **l1, tLinea **l2);
 
 void calcularMaxPorLineaRec(tEstacion *estacion);
 
+
+long int get_total_pasajeros(transporteADT trans);
+
+void get_linea(char * nombre_linea,int * pasajeros,int pos,transporteADT trans);
+
+void get_pasajeros_dia(int * dia,int * noche,int i,transporteADT trans);
+
+tLinea_con_pasajeros ** get_pasajeros_por_linea_vec(transporteADT trans);
+
+tEstacion_favorita ** get_favourite_vec(transporteADT trans);
 
 //------------------------------------
 //     FUNCIONES DEL TAD
@@ -213,3 +223,77 @@ void calcularMaxPorLineaRec(tEstacion *estacion){
 
 
 int compararLineas(tLinea **l1, tLinea **l2){	return (*l1)->pasajeros - (*l2)->pasajeros; }
+
+
+int get_cant_lineas(transporteADT trans){return trans->cant_lineas; }
+//retorna la cantidad de lineas de subterraneo.
+
+
+long int get_total_pasajeros(transporteADT trans){return trans->pasajeros; }
+//retorna la cantidad de pasajeros total.
+
+
+void get_linea(char * nombre_linea,int * pasajeros,int pos,transporteADT trans)
+{
+	*nombre_linea=trans->lineas_ord_desc[pos]->nombre;
+	*pasajeros=trans->lineas_ord_desc[pos]->pasajeros;
+}
+//escribe en punteros que recibe, la cantidad de pasajeros y el nombre de la linea de el i'esimo elemento del vector decenciente de las lineas de subterraneo.
+
+
+
+void get_pasajeros_dia(int * dia,int * noche,int i,transporteADT trans){
+	*dia=trans->vec_diurno[i];
+	*noche=trans->vec_nocturno[i];
+}
+// escribe en los punteros, la cantidad de pasajeros que transidtaron durante el dia y la noche en el dia i de la semana, con domingo siendo 0.
+
+
+
+
+
+tLinea_con_pasajeros ** get_pasajeros_por_linea_vec(transporteADT trans)
+{
+
+	tLinea ** vec_original=trans->lineas_ord_desc;
+
+	//recupero el vector con las lineas de subte ordenadas decendientemente
+
+	int cant_lineas=get_cant_lineas(trans);
+	tLinea_con_pasajeros ** vec=malloc(sizeof(tLinea_con_pasajeros*)*cant_lineas);
+	//genero el vector en el que voy a guardar los datos
+
+	for (int i=0;i<cant_lineas;i++)
+	{
+		tLinea_con_pasajeros * pEstructura=malloc(sizeof(tLinea_con_pasajeros));
+		vec[i]=pEstructura;
+		vec[i]->nombre_linea=vec_original[i]->nombre;
+		vec[i]->pasajeros=vec_original[i]->pasajeros;
+		//crea espacio para la estructura y transcibe los datos del TAD a una estructura que se conoce publicamente
+	}
+	return vec;
+	//retorna el vector nuevamente creado
+}
+
+
+
+tEstacion_favorita ** get_favourite_vec(transporteADT trans)
+{
+	tLinea * lista=trans->lineas_ord_alpha;
+	//recuperar la lista de lineas.
+	tEstacion_favorita ** nuevo_vec=malloc(sizeof(tEstacion_favorita *));
+	//generar el vector que voy a retornar
+	int cant_lineas=get_cant_lineas(trans);
+	for(int i=0;i<cant_lineas;i++)
+	{
+		nuevo_vec[i]=malloc(sizeof(tEstacion_favorita));
+		nuevo_vec[i]->nombre_linea=lista->nombre;
+		nuevo_vec[i]->nombre_estacion=lista->max->nombre;
+		nuevo_vec[i]->pasajeros=lista->max->pasajeros;
+		lista=lista->next;
+	}
+	//transcribir los datos de la estructura del TAD al la nueva estructura generada.
+
+	return nuevo_vec;
+	//retornar el vector de punetros con la info pertinente.
+}

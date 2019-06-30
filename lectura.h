@@ -1,3 +1,8 @@
-void cargarEstaciones(transporteADT trans, char *archivo_estaciones);
+#ifndef __LECTURA_H_
+#define __LECTURA_H_
 
-void cargarMolinetes(transporteADT trans, char *archivo_molinetes);
+void cargarEstaciones(transporteADT trans, char * archivo_estaciones);
+
+void cargarMolinetes(transporteADT trans, char * archivo_molinetes);
+
+#endif

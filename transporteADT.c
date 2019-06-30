@@ -40,8 +40,8 @@ transporteADT newTransporte() {
 
 /* Agrega la linea en orden alfabetico */
 tLinea * addLinea(tLinea * node, char * nombre_linea, tLinea ** dir) {
-
-	if (node == NULL || strcmp(nombre_linea, node->nombre) < 0) {
+	int c;
+	if (node == NULL || (c = strcmp(nombre_linea, node->nombre)) < 0) {
 		tLinea * new_linea = calloc(1, sizeof(tLinea));
 
 		/* copia el nombre de la linea */
@@ -51,6 +51,11 @@ tLinea * addLinea(tLinea * node, char * nombre_linea, tLinea ** dir) {
 		new_linea->next = node;
 		*dir = new_linea;
 		return new_linea;
+	}
+	
+	/* Si la linea ya existe entonces no la agrega */
+	if (c == 0) {
+		return node;
 	}
 
 	node->next = addLinea(node->next, nombre_linea, dir);

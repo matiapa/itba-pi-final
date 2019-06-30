@@ -14,10 +14,10 @@ int main(void) {
 	while (fgetc(archEstacion) != '\n');
 
 	int id; char *linea = malloc(30), *estacion = malloc(30);
-	do{
+	while (!feof(archEstacion)) {
 		fscanf(archEstacion, "%d,%30[^,],%30[^,\n]", &id, linea, estacion);
 		printf("Adding: %d, %s, %s\n", id, linea, estacion);
 		addEstacion(trans, id, linea, estacion);
-	}while(fgetc(archEstacion)!=EOF);
+	}
 	
 }

@@ -87,6 +87,21 @@ void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char
 
 }
 
+void addPasajero(transporteADT trans, unsigned int d, unsigned int m, unsigned int y, unsigned int hora, unsigned int id, unsigned int cant) {
+	/* retorna que dia de la semana es la fecha */
+	int weekday  = (d += m < 3 ? y-- : y - 2, 23*m/9 + d + 4 + y/4- y/100 + y/400)%7;
+	
+	/* Si es esta entre las 6:00 y las 17:00 lo suma al vector diurno, sino al nocturno */
+	if (hora > 6000 && hora <= 1700) {
+		trans->vec_diurno[weekday] += cant;
+	} else {
+		trans->vec_nocturno[weekday] += cant;
+	}
+
+	/* Suma la cantidad de pasajero de esa estacion */
+	trans->estaciones[id - 1].pasajeros += cant;
+}
+
 void getEstacion(transporteADT trans, int id, char *nombre_linea, char *nombre_estacion){
 		strcpy(nombre_estacion, trans->estaciones[id-1].nombre);
 		strcpy(nombre_linea, trans->estaciones[id - 1].linea->nombre);

@@ -11,9 +11,12 @@
 
 
 typedef struct tEstacion {
+	unsigned int id;
 	char * nombre;
 	unsigned int pasajeros;		// Total de pasajeros
 	struct tLinea * linea; 		// Puntero a la linea que pertenece
+	struct tEstacion * left;
+	struct tEstacion * right;
 } tEstacion;
 
 
@@ -32,6 +35,7 @@ typedef struct transporteCDT {
 
 	int cant_lineas;
 	tEstacion * estaciones; 				// Arbol binario con todas las estaciones
+	tEstacion * root;				// Vector con todas las estaciones donde el indice es el id de la estacion
 	unsigned int cant_estaciones;
 
 	unsigned int pasajeros;					// Total de pasajeros
@@ -51,11 +55,17 @@ void leerArchivos(transporteADT trans, char *archivo_estaciones, char *archivo_m
 
 void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char * nombre_estacion);
 
+tEstacion * addArbol(tEstacion * estacion, unsigned int id, char * nombre_estacion, tLinea * dir);
+
 tLinea * addLinea(transporteADT trans, tLinea * node, char * nombre_linea, tLinea ** dir);
 
 void addPasajero(transporteADT trans, unsigned int d, unsigned int m, unsigned int y, unsigned int hora, unsigned int id, unsigned int cant);
 
-void procesarDatos(transporteADT trans);
+tEstacion *getEstacion(tEstacion *estacion, unsigned int id);
+
+void ordenarLineasDesc(transporteADT trans);
+
+void calcularMaxPorLinea(tEstacion *estacion);
 
 int compararLineas(tLinea **l1, tLinea **l2);
 
@@ -66,7 +76,7 @@ int compararLineas(tLinea **l1, tLinea **l2);
 //------------------------------------
 
 
-transporteADT newTransporte(char *archivo_estaciones, char *archivo_molinetes) {
+transporteADT newTransporte(char *archivo_estaciones, char *archivo_molinetes){
 
 	transporteADT trans = calloc(1, sizeof(transporteCDT));
 
@@ -75,6 +85,7 @@ transporteADT newTransporte(char *archivo_estaciones, char *archivo_molinetes) {
 	calcularMaxPorLinea(trans->estaciones);
 
 	return trans;
+
 }
 
 
@@ -135,11 +146,7 @@ void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char
 	trans->lineas_ord_alpha = addLinea(trans, trans->lineas_ord_alpha, nombre_linea, &dir);
 
 	/* Designa los valores a la estructura de la estacion */
-	trans->estaciones[id].pasajeros = 0;
-	trans->estaciones[id].linea = dir;
-
-	trans->estaciones[id].nombre = malloc(strlen(nombre_estacion)+1);
-	strcpy(trans->estaciones[id].nombre, nombre_estacion);
+	trans->root = addArbol(trans->root, id, nombre_estacion, dir);
 
 	trans->cant_estaciones += 1;
 	//printf("Added: %d, %s, %s\n\n", id, trans->estaciones[id].linea->nombre, trans->estaciones[id].nombre);
@@ -147,16 +154,25 @@ void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char
 }
 
 
-tEstacion *getEstacion(testacion *estacion, unsigned int id){
+tEstacion * addArbol(tEstacion * estacion, unsigned int id, char * nombre_estacion, tLinea * dir) {
 
-	if(estacion->id == id)
-		return estacion;
+	if (estacion == NULL) {
+		tEstacion * new = calloc(1, sizeof(*estacion));
+		new->linea = dir;
+		new->id = id;
+		new->nombre = malloc(strlen(nombre_estacion)+1);
+		strcpy(new->nombre, nombre_estacion);
+		return new;
+	}
 
-	if(id > estacion->id)
-		return getEstacion(estacion->right, id);
-
-	return getEstacion(estacion->left, id);
-
+	int c = id - estacion->id;
+	if (c < 0) {
+		estacion->left = addArbol(estacion->left, id, nombre_estacion, dir);
+	}
+	if (c > 0) {
+		estacion->right = addArbol(estacion->right, id, nombre_estacion, dir);
+	}
+	return estacion;
 }
 
 
@@ -202,9 +218,23 @@ void addPasajero(transporteADT trans, unsigned int d, unsigned int m, unsigned i
 		trans->vec_nocturno[weekday] += cant;
 
 	// Incrementa la cantidad de pasajeros de esa estacion, linea y total
-	trans->estaciones[id].pasajeros += cant;
-	trans->estaciones[id].linea->pasajeros += cant;
+	tEstacion *estacion = getEstacion(trans->estaciones, id);
+	estacion->pasajeros += cant;
+	estacion->linea->pasajeros += cant;
 	trans->pasajeros += cant;
+
+}
+
+
+tEstacion *getEstacion(tEstacion *estacion, unsigned int id){
+
+	if(estacion->id == id)
+		return estacion;
+
+	if(id > estacion->id)
+		return getEstacion(estacion->right, id);
+
+	return getEstacion(estacion->left, id);
 
 }
 
@@ -223,7 +253,7 @@ void ordenarLineasDesc(transporteADT trans){
 }
 
 
-void calcularMaxPorLinea(testacion *estacion){
+void calcularMaxPorLinea(tEstacion *estacion){
 
 	// Hace un recorrido preorder del arbol binario, actualizando el máximo de cada línea
 

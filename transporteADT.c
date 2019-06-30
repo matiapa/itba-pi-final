@@ -51,8 +51,6 @@ typedef struct transporteCDT {
 //------------------------------------
 
 
-void leerArchivos(transporteADT trans, char *archivo_estaciones, char *archivo_molinetes);
-
 void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char * nombre_estacion);
 
 tEstacion * addArbol(tEstacion * estacion, unsigned int id, char * nombre_estacion, tLinea * dir);
@@ -76,63 +74,7 @@ int compararLineas(tLinea **l1, tLinea **l2);
 //------------------------------------
 
 
-transporteADT newTransporte(char *archivo_estaciones, char *archivo_molinetes){
-
-	transporteADT trans = calloc(1, sizeof(transporteCDT));
-
-	leerArchivos(trans, archivo_estaciones, archivo_molinetes);
-	ordenarLineasDesc(trans);
-	calcularMaxPorLinea(trans->estaciones);
-
-	return trans;
-
-}
-
-
-void leerArchivos(transporteADT trans, char *archivo_estaciones, char *archivo_molinetes){
-
-	FILE * archEstacion = fopen(archivo_estaciones, "r");
-	FILE * archMol = fopen(archivo_molinetes, "r");
-
-	if (archEstacion == NULL || archMol == NULL) {
-		printf("No se pudo abrir uno de los archivos\n");
-		exit(1);
-	}
-
-	// Se saltea los encabezados
-	while (fgetc(archEstacion) != '\n');
-	while (fgetc(archMol) != '\n');
-
-
-	/* Lectura de estaciones */
-	int id; char *linea = malloc(30), *estacion = malloc(30);
-
-	while (fscanf(archEstacion, "%d,%30[^,],%30[^,\n]", &id, linea, estacion) == 3) {
-		//printf("Adding %d, %s, %s\n", id, linea, estacion);
-		addEstacion(trans, id, linea, estacion);
-	}
-
-	fclose(archEstacion);
-
-
-	printf("Se agregaron %d estaciones y %d lineas\n", trans->cant_estaciones, trans->cant_lineas);
-
-
-	/* Lectura de molinetes */
-	unsigned int hora, min, hrs, cant, d, m, y;
-
-	// Solo se leera la hora de finalizacion del intervalo, la de inicio no es necesaria
-	while (fscanf(archMol, "%d/%d/%d,%*[^,],%d:%d,%d,%d", &d, &m, &y, &hrs, &min, &id, &cant) == 7) {
-		hora = hrs*100 + min;
-		//printf("Adding %d/%d/%d %d:%d - %d: %d\n", d, m, y, hrs, min, id, cant);
-		addPasajero(trans, d, m, y, hora, id, cant);
-	}
-
-	fclose(archMol);
-
-	printf("Se agregaron %d pasajeros\n", trans->pasajeros);
-
-}
+transporteADT newTransporte(char *archivo_estaciones, char *archivo_molinetes){ return calloc(1, sizeof(transporteCDT)); }
 
 
 void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char * nombre_estacion) {
@@ -239,7 +181,7 @@ tEstacion *getEstacion(tEstacion *estacion, unsigned int id){
 }
 
 
-void ordenarLineasDesc(transporteADT trans){
+ void ordenarLineasDesc(transporteADT trans){
 
 	// Primero, completa el vector con los punteros a las líneas, que están en la lista
 	trans->lineas_ord_desc = malloc(trans->cant_lineas*sizeof(tLinea *));
@@ -253,7 +195,10 @@ void ordenarLineasDesc(transporteADT trans){
 }
 
 
-void calcularMaxPorLinea(tEstacion *estacion){
+void calcularMaxPorLinea(transporteADT trans){ calcularMaxPorLineaRec(trans->estacion); }
+
+
+void calcularMaxPorLineaRec(tEstacion *estacion){
 
 	// Hace un recorrido preorder del arbol binario, actualizando el máximo de cada línea
 

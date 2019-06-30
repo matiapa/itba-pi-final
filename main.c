@@ -1,6 +1,5 @@
 #include "transporteADT.h"
 #include <stdio.h>
-#include <stdlib.h>
 
 int main(int argc, char **argv) {
 
@@ -9,21 +8,14 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 
-	transporteADT trans = newTransporte(argv[1], argv[2]);
-}
+	transporteADT trans = newTransporte();
 
-/*
-newTransporte
-|
-|-> leerArchivos
-|   |
-|   |-> addEstacion
-|   |   |
-|   |   |-> addLinea
-|   |
-|   |-> addPasajero
-|
-|-> procesarDatos
-    |
-    |-> compararLineas
-*/
+	// Carga de datos
+	cargarEstaciones(trans, argv[1]);
+	cargarMolinetes(trans, argv[2]);
+
+	// Procesamiento de datos
+	ordenarLineasDesc(trans);
+	calcularMaxPorLinea(trans);
+
+}

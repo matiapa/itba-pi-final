@@ -1,0 +1,70 @@
+main.c
+|
+|-> main
+    |
+    |-> cargarEstaciones();
+    |-> cargarMolinetes();
+    |
+    |-> ordenarLineasDesc();
+    |-> calcularMaxPorLinea();
+    |
+    |-> query1();
+    |-> query2();
+    |-> query3();
+    |-> query4();
+
+
+lectura.c
+|
+|-> cargarEstaciones
+|   |
+|   |-> addEstacion();
+|
+|-> cargarMolinetes
+    |
+    |-> addPasajero();
+
+
+queries.c
+|
+|-> query1
+|   |
+|   |->
+|
+|-> query1
+|   |
+|   |->
+|
+|-> query3
+|   |
+|   |->
+|
+|-> query4
+    |
+    |->
+
+
+transporteADT.c
+|
+|-> newTransporte
+|
+|-> addEstacion
+|   |
+|   |-> addArbol
+|   |-> addLinea
+|
+|-> addPasajero
+|   |
+|   |-> getEstacion
+|
+|-> ordenarLineasDesc
+|   |
+|   |-> compararLineas
+|
+|->
+|
+|->
+|
+|->
+|
+|->

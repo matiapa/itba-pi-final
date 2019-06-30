@@ -15,3 +15,11 @@ typedef struct tEstacion_favorita
 	char * nombre_linea;
 	long int pasajeros;
 }tEstacion_favorita;
+
+// estructura de intercambio entre el TAD y el front end del query 4.
+
+typedef struct tLinea_con_pasajeros
+{
+	char * nombre_linea;
+	long int pasajeros;
+}tLinea_con_pasajeros;

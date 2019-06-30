@@ -1,13 +1,13 @@
 #include <stdio.h>
 #define DIAS_SEMANA 7
 
-
-typedef struct tEstacion_favorita
-{
-	char * nombre_estacion;
-	char * nombre_linea;
-	long int pasajeros;
-}tEstacion_favorita;
+funciones que necesito:
+cant_lineas
+get_total_pasajeros
+get_linea
+get_pasajeros_dia
+get_pasajeros_por_linea_vec
+get_favourite_vec
 
 int main()
 {
@@ -53,10 +53,38 @@ void query2(transporteADT trans)
 	//cerrar el archivo
 }
 
+void query3(transporteADT trans){
+	tLinea_con_pasajeros ** vec=get_pasageros_por_linea_vec(trans);
+	tLinea_con_pasajeros * linea;
+	//recibe vecor de punteros a estructuras con la linea y cantidad de pasajeros en cada estructura a la que apunta cada elemento del vector.
+	
+	long int total_pasajeros=get_total_pasajeros(trans);
+	int cant_lineas=cant_lineas(trans);
+	//consigue la cantidad de lineas del subterraneo para saber cuantas iteraciones hacer y la cantidad de pasageros totales para hacer los calculos.
+	
+	FILE *fptr=fopen("./query3.csv","w");
+	//generar el archivo a escribir.
+	
+	for (int i=0;i<cant_lineas;i++){
+		linea=vec[i]
+		fprintf(fptr,"%s,%ld% \n",linea->nombre_linea,(linea->pasajeros/total_pasajeros)*100);
+
+	}
+	// agrega los valores al archivo
+	
+	fclose(fptr);
+	//cierra el archivo
+
+}
+
+
+
+
 void query4(transporteADT trans){
 
-	//recibe un vector de estructuras con la linea, estacion y cantidad de pasajeros en cada elemento del vector.
+	//recibe un vector de punteros a estructuras con la linea, estacion y cantidad de pasajeros en cada estructura a la que aunta cada elemento del vector.
 	tEstacion_favorita ** vec=get_favourite_vec(trans);
+	tEstacion_favorita * estacion_fav;
 	
 	
 	int cant_lineas=cant_lineas(trans);
@@ -67,7 +95,15 @@ void query4(transporteADT trans){
 	//generar el archivo
 	
 	for (int i=0;i<cant_lineas;i++){
-		vec[0}
+		estacion_fav=vec[i];
+		fprintf(fptr,"%s,%s,%ld \n",estacion_fav.nombre_estacion,estacon_fav.nombre_linea,estacion_fav.pasajeros);
+	}
+	//agregar los valores de las estructuras al archivo, iterando en el vector
+	
+	fclose(fptr);
+	//cerrar el archivo
+}
+
 
 
 

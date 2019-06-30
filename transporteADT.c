@@ -55,6 +55,7 @@ tLinea * addLinea(tLinea * node, char * nombre_linea, tLinea ** dir) {
 	
 	/* Si la linea ya existe entonces no la agrega */
 	if (c == 0) {
+		*dir = node;
 		return node;
 	}
 

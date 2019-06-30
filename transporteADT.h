@@ -32,7 +32,7 @@ typedef struct tLinea_con_pasajeros
 }tLinea_con_pasajeros;
 
 //estructura de intercambio entre el TAD y el fron end del query 3.
-<<<<<<< HEAD
+
 
 
 
@@ -47,5 +47,5 @@ void get_pasajeros_dia(long int * dia,long int * noche,int i,transporteADT trans
 tLinea_con_pasajeros ** get_pasajeros_por_linea_vec(transporteADT trans);
 
 tEstacion_favorita ** get_favourite_vec(transporteADT trans);
-=======
->>>>>>> e944651ab94815e7131a91b89e90d5f107f7f030
+
+

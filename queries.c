@@ -2,9 +2,9 @@
 #define DIAS_SEMANA 7
 
 funciones que necesito:
-cant_lineas
-get_total_pasajeros
-get_linea
+get_cant_lineas done
+get_total_pasajeros done
+get_linea done
 get_pasajeros_dia
 get_pasajeros_por_linea_vec
 get_favourite_vec
@@ -19,7 +19,7 @@ void query1(transporteADT trans)
 {
 	char * nombre_linea;
         long int pasajeros;
-	int cant_lineas=cant_lineas(trans);
+	int cant_lineas=get_cant_lineas(trans);
 	//conseguir cantidad de lineas de subte para saber cuantas lineas agregar al archivo.
 	
 	FILE *fptr=fopen("./query1.csv","w");
@@ -59,7 +59,7 @@ void query3(transporteADT trans){
 	//recibe vecor de punteros a estructuras con la linea y cantidad de pasajeros en cada estructura a la que apunta cada elemento del vector.
 	
 	long int total_pasajeros=get_total_pasajeros(trans);
-	int cant_lineas=cant_lineas(trans);
+	int cant_lineas=get_cant_lineas(trans);
 	//consigue la cantidad de lineas del subterraneo para saber cuantas iteraciones hacer y la cantidad de pasageros totales para hacer los calculos.
 	
 	FILE *fptr=fopen("./query3.csv","w");
@@ -87,7 +87,7 @@ void query4(transporteADT trans){
 	tEstacion_favorita * estacion_fav;
 	
 	
-	int cant_lineas=cant_lineas(trans);
+	int cant_lineas=get_cant_lineas(trans);
 	//consigue la cantidad de lineas de subterraneo para saber cuantas iteraciones hacer.
 	
 

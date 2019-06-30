@@ -38,7 +38,7 @@ typedef struct transporteCDT {
 	tEstacion * root;				// Vector con todas las estaciones donde el indice es el id de la estacion
 	unsigned int cant_estaciones;
 
-	unsigned int pasajeros;					// Total de pasajeros
+	long int pasajeros;					// Total de pasajeros
 	unsigned int vec_diurno[7];			// Cantidad de pasajeros por día de la semana en período diurno, la primer posición es domingo
 	unsigned int vec_nocturno[7];
 
@@ -67,6 +67,13 @@ void calcularMaxPorLinea(tEstacion *estacion);
 
 int compararLineas(tLinea **l1, tLinea **l2);
 
+int get_cant_lineas(transporteADT trans);
+
+long int get_total_pasajeros(transporteADT trans);
+
+void get_linea(char * nombre_linea,int * pasajeros,int pos,TransporteADT trans);
+
+void get_pasajeros_dia(int * dia,int * noche,int i,transporteADT trans);
 
 
 //------------------------------------
@@ -212,3 +219,28 @@ void calcularMaxPorLineaRec(tEstacion *estacion){
 
 
 int compararLineas(tLinea **l1, tLinea **l2){	return (*l1)->pasajeros - (*l2)->pasajeros; }
+
+
+int get_cant_lineas(transporteADT trans){return trans->cant_lineas; }
+//retorna la cantidad de lineas de subterraneo.
+
+
+long int get_total_pasajeros(transporteADT trans){return trans->pasajeros; }
+//retorna la cantidad de pasajeros total.
+
+
+void get_linea(char * nombre_linea,int * pasajeros,int pos,transporteADT trans)
+{
+	*nombre_linea=trans->lineas_ord_desc[i]->nombre;
+	*pasajeros=trans->lineas_ord_desc[i]->pasajeros;
+}
+//escribe en punteros que recibe, la cantidad de pasajeros y el nombre de la linea de el i'esimo elemento del vector decenciente de las lineas de subterraneo.
+
+
+
+void get_pasajeros_dia(int * dia,int * noche,int i,transporteADT trans){
+	*dia=trans->vec_diurno[i];
+	*noche=trans->vec_nocturno[i];
+}
+// escribe en los punteros, la cantidad de pasajeros que transidtaron durante el dia y la noche en el dia i de la semana, con domingo siendo 0.
+

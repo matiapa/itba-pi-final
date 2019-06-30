@@ -9,23 +9,21 @@
 //     DEFINICION DE STRUCTS
 //------------------------------------
 
-
-typedef struct tEstacion {
-	unsigned int id;
-	char * nombre;
-	unsigned int pasajeros;		// Total de pasajeros
-	struct tLinea * linea; 		// Puntero a la linea que pertenece
-	struct tEstacion * left;
-	struct tEstacion * right;
-} tEstacion;
-
-
 typedef struct tLinea {
 	char * nombre;
 	unsigned int pasajeros;			// Total de pasajeros
-	tEstacion * max; 			// Puntero a la estacion con mas pasajeros
+	struct tEstacion * max; 			// Puntero a la estacion con mas pasajeros
 	struct tLinea * next;
 } tLinea;
+
+typedef struct tEstacion {
+	unsigned int id;
+	int pasajeros;		// Total de pasajeros
+	char *nombre;
+	tLinea *linea; 		// Puntero a la linea que pertenece
+	struct tEstacion * left;
+	struct tEstacion * right;
+} tEstacion;
 
 
 typedef struct transporteCDT {
@@ -35,7 +33,6 @@ typedef struct transporteCDT {
 
 	int cant_lineas;
 	tEstacion * estaciones; 				// Arbol binario con todas las estaciones
-	tEstacion * root;				// Vector con todas las estaciones donde el indice es el id de la estacion
 	unsigned int cant_estaciones;
 
 	long int pasajeros;					// Total de pasajeros
@@ -51,23 +48,16 @@ typedef struct transporteCDT {
 //------------------------------------
 
 
-void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char * nombre_estacion);
-
-tEstacion * addArbol(tEstacion * estacion, unsigned int id, char * nombre_estacion, tLinea * dir);
+tEstacion * addEstacionRec(tEstacion * estacion, unsigned int id, char * nombre_estacion, tLinea * dir_linea, tEstacion **dir_est);
 
 tLinea * addLinea(transporteADT trans, tLinea * node, char * nombre_linea, tLinea ** dir);
 
-void addPasajero(transporteADT trans, unsigned int d, unsigned int m, unsigned int y, unsigned int hora, unsigned int id, unsigned int cant);
-
 tEstacion *getEstacion(tEstacion *estacion, unsigned int id);
-
-void ordenarLineasDesc(transporteADT trans);
-
-void calcularMaxPorLinea(transporteADT trans);
 
 int compararLineas(tLinea **l1, tLinea **l2);
 
-int get_cant_lineas(transporteADT trans);
+void calcularMaxPorLineaRec(tEstacion *estacion);
+
 
 long int get_total_pasajeros(transporteADT trans);
 
@@ -76,9 +66,6 @@ void get_linea(char * nombre_linea,long int * pasajeros,int pos,transporteADT tr
 
 
 void get_pasajeros_dia(long int * dia,long int * noche,int i,transporteADT trans);
-
-
-void calcularMaxPorLineaRec(tEstacion *estacion);
 
 tLinea_con_pasajeros ** get_pasajeros_por_linea_vec(transporteADT trans);
 
@@ -94,42 +81,53 @@ transporteADT newTransporte(char *archivo_estaciones, char *archivo_molinetes){ 
 
 void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char * nombre_estacion) {
 
-	/* Chequea si hay espacio en el vector de estaciones, sino lo agrega */
-	if (trans->cant_estaciones % BLOQUE == 0)
-		trans->estaciones = realloc(trans->estaciones, (trans->cant_estaciones + BLOQUE)*sizeof(tEstacion));
-
 	/* Agrega la linea y guarda el puntero a la linea de la estacion */
-	tLinea * dir = NULL;
-	trans->lineas_ord_alpha = addLinea(trans, trans->lineas_ord_alpha, nombre_linea, &dir);
+	tLinea * dir_linea = NULL;
+	trans->lineas_ord_alpha = addLinea(trans, trans->lineas_ord_alpha, nombre_linea, &dir_linea);
 
-	/* Designa los valores a la estructura de la estacion */
-	trans->root = addArbol(trans->root, id, nombre_estacion, dir);
-
+	tEstacion * dir_est = NULL;
+	trans->estaciones = addEstacionRec(trans->estaciones, id, nombre_estacion, dir_linea, &dir_est);
 	trans->cant_estaciones += 1;
-	//printf("Added: %d, %s, %s\n\n", id, trans->estaciones[id].linea->nombre, trans->estaciones[id].nombre);
+
+	printf("New dir %p\n", dir_est);
+	printf("Added: %d, %s, %s\n\n", id, dir_est->linea->nombre, dir_est->nombre);
 
 }
 
 
-tEstacion * addArbol(tEstacion * estacion, unsigned int id, char * nombre_estacion, tLinea * dir) {
+tEstacion * addEstacionRec(tEstacion * estacion, unsigned int id, char * nombre_estacion, tLinea * dir_linea, tEstacion **dir_est) {
+
+	printf("0\n");
 
 	if (estacion == NULL) {
-		tEstacion * new = calloc(1, sizeof(*estacion));
-		new->linea = dir;
-		new->id = id;
-		new->nombre = malloc(strlen(nombre_estacion)+1);
-		strcpy(new->nombre, nombre_estacion);
-		return new;
+
+		printf("Center\n");
+		tEstacion *new_estacion = malloc(sizeof(tEstacion));
+		/* Designa los valores a la estructura de la estacion */
+		new_estacion->pasajeros = 0;
+		new_estacion->linea = dir_linea;
+
+		new_estacion->nombre = malloc(strlen(nombre_estacion)+1);
+		strcpy(new_estacion->nombre, nombre_estacion);
+
+		*dir_est = new_estacion;
+		return new_estacion;
+
 	}
 
-	int c = id - estacion->id;
-	if (c < 0) {
-		estacion->left = addArbol(estacion->left, id, nombre_estacion, dir);
+	if (id < estacion->id){
+		printf("Left\n");
+		estacion->left = addEstacionRec(estacion->left, id, nombre_estacion, dir_linea, dir_est);
 	}
-	if (c > 0) {
-		estacion->right = addArbol(estacion->right, id, nombre_estacion, dir);
+
+	if (id > estacion->id){
+		printf("Right\n");
+		estacion->right = addEstacionRec(estacion->right, id, nombre_estacion, dir_linea, dir_est);
 	}
+
+	printf("1\n");
 	return estacion;
+
 }
 
 
@@ -220,8 +218,8 @@ void calcularMaxPorLineaRec(tEstacion *estacion){
 	if(estacion->pasajeros > estacion->linea->max->pasajeros)
 		estacion->linea->max = estacion;
 
-	calcularMaxPorLinea(estacion->left);
-	calcularMaxPorLinea(estacion->right);
+	calcularMaxPorLineaRec(estacion->left);
+	calcularMaxPorLineaRec(estacion->right);
 
 }
 
@@ -255,18 +253,18 @@ void get_pasajeros_dia(long int * dia,long int * noche,int i,transporteADT trans
 
 
 
-	
+
 tLinea_con_pasajeros ** get_pasajeros_por_linea_vec(transporteADT trans)
 {
-	
+
 	tLinea ** vec_original=trans->lineas_ord_desc;
-	
-	//recupero el vector con las lineas de subte ordenadas decendientemente	
+
+	//recupero el vector con las lineas de subte ordenadas decendientemente
 
 	int cant_lineas=get_cant_lineas(trans);
 	tLinea_con_pasajeros ** vec=malloc(sizeof(tLinea_con_pasajeros*)*cant_lineas);
 	//genero el vector en el que voy a guardar los datos
-	
+
 	for (int i=0;i<cant_lineas;i++)
 	{
 		tLinea_con_pasajeros * pEstructura=malloc(sizeof(tLinea_con_pasajeros));
@@ -280,7 +278,7 @@ tLinea_con_pasajeros ** get_pasajeros_por_linea_vec(transporteADT trans)
 }
 
 
-	
+
 tEstacion_favorita ** get_favourite_vec(transporteADT trans)
 {
 	tLinea * lista=trans->lineas_ord_alpha;
@@ -297,7 +295,7 @@ tEstacion_favorita ** get_favourite_vec(transporteADT trans)
 		lista=lista->next;
 	}
 	//transcribir los datos de la estructura del TAD al la nueva estructura generada.
-	
+
 	return nuevo_vec;
 	//retornar el vector de punetros con la info pertinente.
 }

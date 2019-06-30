@@ -1,0 +1,41 @@
+void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char * nombre_estacion) {
+
+	// Agrega la linea y guarda el puntero a la linea de la estacion
+	tLinea * dir = NULL;
+	trans->lineas_ord_alpha = addLinea(trans, trans->lineas_ord_alpha, nombre_linea, &dir);
+
+	// Agrega la estacion al arbol binario
+	trans->estaciones = addEstacionRec(trans->estaciones, id, nombre_estacion, dir);
+	trans->cant_estaciones += 1;
+
+	tEstacion *estacion = getEstacion(trans->estaciones, id);
+	printf("Added %s %s %d\n\n", estacion->nombre, estacion->linea->nombre, id);
+
+}
+
+
+tEstacion * addEstacionRec(tEstacion * estacion, unsigned int id, char * nombre_estacion, tLinea * dir) {
+
+	if (estacion == NULL) {
+		tEstacion * new = malloc(sizeof(tEstacion *));
+		new->id = id;
+		new->linea = dir;
+
+		printf("LIN1 %p\n", new->linea);
+		new->nombre = malloc(strlen(nombre_estacion)+1);
+		strcpy(new->nombre, nombre_estacion);
+		printf("LIN2 %p\n", new->linea);
+
+		return new;
+	}
+
+	int c = id - estacion->id;
+	if (c < 0)
+		estacion->left = addEstacionRec(estacion->left, id, nombre_estacion, dir);
+
+	if (c > 0)
+		estacion->right = addEstacionRec(estacion->right, id, nombre_estacion, dir);
+
+	return estacion;
+
+}

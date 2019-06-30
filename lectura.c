@@ -43,7 +43,7 @@ void cargarMolinetes(transporteADT trans, char *archivo_molinetes){
 	unsigned int hora, min, hrs, cant, d, m, y, id;
 
 	// Solo se leera la hora de finalizacion del intervalo, la de inicio no es necesaria
-	while (fscanf(archMol, "%d/%d/%d,%*[^,],%d:%d,%d,%d", &d, &m, &y, &hrs, &min, &id, &cant) == 7) {
+	while (fscanf(archMol, "%u/%u/%u,%*[^,],%u:%u,%u,%u", &d, &m, &y, &hrs, &min, &id, &cant) == 7) {
 		hora = hrs*100 + min;
 		//printf("Adding %d/%d/%d %d:%d - %d: %d\n", d, m, y, hrs, min, id, cant);
 		addPasajero(trans, d, m, y, hora, id, cant);

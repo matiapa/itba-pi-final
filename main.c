@@ -15,12 +15,11 @@ int main(int argc, char **argv) {
 
 	// Carga de datos
 	cargarEstaciones(trans, argv[1]);
-	/*
 	cargarMolinetes(trans, argv[2]);
+
 
 	// Procesamiento de datos
 	ordenarLineasDesc(trans);
 	calcularMaxPorLinea(trans);
-	*/
 
 }

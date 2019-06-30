@@ -48,7 +48,7 @@ typedef struct transporteCDT {
 //------------------------------------
 
 
-tEstacion * addEstacionRec(tEstacion * estacion, unsigned int id, char * nombre_estacion, tLinea * dir_linea, tEstacion **dir_est);
+tEstacion * addEstacionRec(tEstacion * estacion, unsigned int id, char * nombre_estacion, tLinea * dir_linea);
 
 tLinea * addLinea(transporteADT trans, tLinea * node, char * nombre_linea, tLinea ** dir);
 
@@ -85,16 +85,16 @@ void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char
 	tLinea * dir_linea = NULL;
 	trans->lineas_ord_alpha = addLinea(trans, trans->lineas_ord_alpha, nombre_linea, &dir_linea);
 
-	tEstacion * dir_est = NULL;
-	trans->estaciones = addEstacionRec(trans->estaciones, id, nombre_estacion, dir_linea, &dir_est);
+	trans->estaciones = addEstacionRec(trans->estaciones, id, nombre_estacion, dir_linea);
 	trans->cant_estaciones += 1;
 
-	printf("Added: %d, %s, %s\n\n", id, dir_est->linea->nombre, dir_est->nombre);
+	// tEstacion * dir_est = getEstacion(trans->estaciones, id);
+	// printf("Added: %d, %s, %s\n\n", id, dir_est->linea->nombre, dir_est->nombre);
 
 }
 
 
-tEstacion * addEstacionRec(tEstacion * estacion, unsigned int id, char * nombre_estacion, tLinea * dir_linea, tEstacion **dir_est) {
+tEstacion * addEstacionRec(tEstacion * estacion, unsigned int id, char * nombre_estacion, tLinea * dir_linea) {
 
 	if (estacion == NULL) {
 
@@ -108,7 +108,6 @@ tEstacion * addEstacionRec(tEstacion * estacion, unsigned int id, char * nombre_
 		new_estacion->nombre = malloc(strlen(nombre_estacion)+1);
 		strcpy(new_estacion->nombre, nombre_estacion);
 
-		*dir_est = new_estacion;
 		return new_estacion;
 
 	}
@@ -116,10 +115,10 @@ tEstacion * addEstacionRec(tEstacion * estacion, unsigned int id, char * nombre_
 	int c = id - estacion->id;
 
 	if (c<0)
-		estacion->left = addEstacionRec(estacion->left, id, nombre_estacion, dir_linea, dir_est);
+		estacion->left = addEstacionRec(estacion->left, id, nombre_estacion, dir_linea);
 
 	if (c>0)
-		estacion->right = addEstacionRec(estacion->right, id, nombre_estacion, dir_linea, dir_est);
+		estacion->right = addEstacionRec(estacion->right, id, nombre_estacion, dir_linea);
 
 	return estacion;
 
@@ -199,6 +198,9 @@ tEstacion *getEstacion(tEstacion *estacion, unsigned int id){
 
 	// Luego, aplica quicksort sobre el vector
 	qsort(trans->lineas_ord_desc, trans->cant_lineas, sizeof(tLinea *), (int (*)(const void *, const void *)) compararLineas);
+
+	for(int i=1; i<trans->cant_lineas; i++)
+		printf("%s %d\n", trans->lineas_ord_desc[i]->nombre, trans->lineas_ord_desc[i]->pasajeros);
 
 }
 

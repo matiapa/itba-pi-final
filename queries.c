@@ -1,13 +1,6 @@
 #include <stdio.h>
 #define DIAS_SEMANA 7
 
-funciones que necesito:
-get_cant_lineas done
-get_total_pasajeros done
-get_linea done
-get_pasajeros_dia
-get_pasajeros_por_linea_vec
-get_favourite_vec
 
 int main()
 {
@@ -22,8 +15,11 @@ void query1(transporteADT trans)
 	int cant_lineas=get_cant_lineas(trans);
 	//conseguir cantidad de lineas de subte para saber cuantas lineas agregar al archivo.
 	
-	FILE *fptr=fopen("./query1.csv","w");
+	FILE *fptr=fopen("query1.csv","w");
 	//generar el archivo
+	
+	fprintf(fptr,"Línea,Pasajeros \n");
+	//escribir el header.
 
 	for (int i=0;i<cant_lineas;i++){
 		get_linea(&nombre_linea,&pasajeros,i,trans);
@@ -42,8 +38,14 @@ void query2(transporteADT trans)
 	long int dia,noche;
 	
 
-	FILE *fptr=fopen("./query2.csv","w");
+	FILE *fptr=fopen("query2.csv","w");
 	         //generar el archivo
+	
+	fprintf(fptr,"Día,Diurnos,Nocturnos,Total \n");
+	//escribir el header del archivo.
+	
+
+
 	for (int i=0;i<DIAS_SEMANA;i++){
 		get_pasajeros_dia(&dia,&noche,i,trans);
 		fprintf(ftpr,"%s,%ld,%ld,%ld \n",dias[i],dia,noche,dia+noche);
@@ -62,9 +64,11 @@ void query3(transporteADT trans){
 	int cant_lineas=get_cant_lineas(trans);
 	//consigue la cantidad de lineas del subterraneo para saber cuantas iteraciones hacer y la cantidad de pasageros totales para hacer los calculos.
 	
-	FILE *fptr=fopen("./query3.csv","w");
+	FILE *fptr=fopen("query3.csv","w");
 	//generar el archivo a escribir.
 	
+	fprintf(fptr,"Línea,Porcentaje \n");
+	// ecribir el header del archivo.
 	for (int i=0;i<cant_lineas;i++){
 		linea=vec[i]
 		fprintf(fptr,"%s,%ld% \n",linea->nombre_linea,(linea->pasajeros/total_pasajeros)*100);
@@ -82,7 +86,7 @@ void query3(transporteADT trans){
 
 void query4(transporteADT trans){
 
-	//recibe un vector de punteros a estructuras con la linea, estacion y cantidad de pasajeros en cada estructura a la que aunta cada elemento del vector.
+	//recibe un vector de punteros a estructuras con la linea, estacion y cantidad de pasajeros en cada estructura a la que apunta cada elemento del vector.
 	tEstacion_favorita ** vec=get_favourite_vec(trans);
 	tEstacion_favorita * estacion_fav;
 	
@@ -91,8 +95,11 @@ void query4(transporteADT trans){
 	//consigue la cantidad de lineas de subterraneo para saber cuantas iteraciones hacer.
 	
 
-	FILE *fptr=fopen("./query4.csv","w");
+	FILE *fptr=fopen("query4.csv","w");
 	//generar el archivo
+	
+	 fprintf(fptr,"Estación,Línea,Pasajeros \n");
+	         //escribir el header.
 	
 	for (int i=0;i<cant_lineas;i++){
 		estacion_fav=vec[i];

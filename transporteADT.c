@@ -75,6 +75,9 @@ void get_linea(char * nombre_linea,int * pasajeros,int pos,TransporteADT trans);
 
 void get_pasajeros_dia(int * dia,int * noche,int i,transporteADT trans);
 
+tEstacion_favorita ** get_pasajeros_por_linea_vec(transporteADT trans);
+
+tEstacion_favorita ** get_favourite_vec(transporteADT trans);
 
 //------------------------------------
 //     FUNCIONES DEL TAD
@@ -244,3 +247,52 @@ void get_pasajeros_dia(int * dia,int * noche,int i,transporteADT trans){
 }
 // escribe en los punteros, la cantidad de pasajeros que transidtaron durante el dia y la noche en el dia i de la semana, con domingo siendo 0.
 
+
+
+
+	
+tLinea_con_pasajeros ** get_pasajeros_por_linea_vec(transporteADT trans)
+{
+	
+	tLinea ** vec_original=trans->lineas_ord_desc;
+	
+	//recupero el vector con las lineas de subte ordenadas decendientemente	
+
+	int cant_lineas=get_cant_lineas(trans);
+	tLinea_con_pasajeros ** vec=malloc(sizeof(tLinea_con_pasajeros*)*cant_lineas);
+	//genero el vector en el que voy a guardar los datos
+	
+	for (int i=0;i<cant_lineas;i++)
+	{
+		tLinea_con_pasajeros * pEstructura=malloc(sizeof(tLinea_con_pasajeros));
+		vec[i]=pEstructura;
+		vec[i]->nombre_linea=vec_original[i]->nombre;
+		vec[i]->pasajeros=veco_original[i]->pasajeros;
+		//crea espacio para la estructura y transcibe los datos del TAD a una estructura que se conoce publicamente
+	}
+	return vec;
+	//retorna el vector nuevamente creado
+}
+
+
+	
+tEstacion_favorita ** get_favourite_vec(transporteADT trans)
+{
+	tLinea * lista=trans->lineas_ord_alpha;
+	//recuperar la lista de lineas.
+	tEstacion_favorita ** nuevo_vec=malloc(sizeof(tEstacion_favorita *));
+	//generar el vector que voy a retornar
+	int cant_lineas=get_cant_lineas(trans);
+	for(int i=0;i<cant_lineas;i++)
+	{
+		nuevo_vec[i]=malloc(sizeof(tEstacion_favorita));
+		nuevo_vec[i]->nombre_linea=lista->nombre;
+		nuevo_vec[i]->nombre_estacion=lista->max->nombre;
+		nuevo_vec[i]->pasajeros=lista->max->pasajeros;
+		lista=lista->next;
+	}
+	//transcribir los datos de la estructura del TAD al la nueva estructura generada.
+	
+	return nuevo_vec;
+	//retornar el vector de punetros con la info pertinente.
+}

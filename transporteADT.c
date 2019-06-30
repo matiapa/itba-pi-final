@@ -4,7 +4,6 @@
 #include <string.h>
 #define BLOQUE 100
 
-
 typedef struct tEstacion {
 	char * nombre; /* nombre de la estacion */
 	unsigned int pasajeros; /* cantidad de pasajeros de la estacion */
@@ -22,46 +21,50 @@ typedef struct tLinea {
 
 
 typedef struct transporteCDT {
-	tLinea * first;
-	unsigned int pasajeros; /* Suma de los pasajero de todas las lineas */
-	unsigned int * vec_diurno; /* la posicion 0 es domingo, 1 lunes... */
-	unsigned int * vec_nocturno;
+
+	tLinea * lineas_ord_alpha;
+	tLinea * lineas_ord_desc;
+
+	int cant_lineas;
 	tEstacion * estaciones; /* vector con todas las estaciones donde el indice es el id de la estacion */
 	unsigned int cant_estaciones; /* Cantidad de estaciones del transporte */
+
+	unsigned int pasajeros; /* Suma de los pasajeros de todas las lineas */
+	unsigned int * vec_diurno; /* la posicion 0 es domingo, 1 lunes... */
+	unsigned int * vec_nocturno;
+
 }transporteCDT;
 
 
-
 /* Crea un nuevo transporte */
-transporteADT newTransporte() {
-	return calloc(1, sizeof(transporteCDT));
+transporteADT newTransporte(char *archivo_molinetes, char *archivo_estaciones) {
+
+	transporteADT trans = calloc(1, sizeof(transporteCDT));
+
+	leerEstaciones(trans, archivo_estaciones);
+	leerMolinetes(trans, archivo_molinetes);
+	procesarDatos(trans);
+
+	return trans;
 }
 
 
-/* Agrega la linea en orden alfabetico */
-tLinea * addLinea(tLinea * node, char * nombre_linea, tLinea ** dir) {
-	int c;
-	if (node == NULL || (c = strcmp(nombre_linea, node->nombre)) < 0) {
-		tLinea * new_linea = calloc(1, sizeof(tLinea));
+void leerEstaciones(transporteADT trans, char *nombre_archivo){
 
-		/* copia el nombre de la linea */
-		new_linea->nombre = malloc(strlen(nombre_linea));
-		strcpy(new_linea->nombre, nombre_linea);
+	FILE * archEstacion = fopen(nombre_archivo, "r");
 
-		new_linea->next = node;
-		*dir = new_linea;
-		return new_linea;
-	}
-	
-	/* Si la linea ya existe entonces no la agrega */
-	if (c == 0) {
-		*dir = node;
-		return node;
+	// Se saltea el encabezado
+	while (fgetc(archEstacion) != '\n');
+
+	int id; char *linea = malloc(30), *estacion = malloc(30);
+	while (fscanf(archEstacion, "%d,%30[^,],%30[^,\n]", &id, linea, estacion) == 3) {
+		printf("Adding: %d, %s, %s\n", id, linea, estacion);
+		addEstacion(trans, id, linea, estacion);
 	}
 
-	node->next = addLinea(node->next, nombre_linea, dir);
-	return node;
 }
+
+void leerMolinetes();
 
 
 /* Agrega la etacion al transporte */
@@ -73,7 +76,7 @@ void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char
 
 	/* Agrega la linea y guarda el puntero a la linea de la estacion */
 	tLinea * dir = NULL;
-	trans->first = addLinea(trans->first, nombre_linea, &dir);
+	trans->lineas_ord_alpha = addLinea(trans->lineas_ord_alpha, nombre_linea, &dir);
 
 	/* Designa los valores a la estructura de la estacion */
 	trans->estaciones[id - 1].pasajeros = 0;
@@ -87,7 +90,44 @@ void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char
 
 }
 
-void getEstacion(transporteADT trans, int id, char *nombre_linea, char *nombre_estacion){
-		strcpy(nombre_estacion, trans->estaciones[id-1].nombre);
-		strcpy(nombre_linea, trans->estaciones[id - 1].linea->nombre);
+/* Agrega la linea en orden alfabetico */
+tLinea * addLinea(tLinea * node, char * nombre_linea, tLinea ** dir) {
+	int c;
+	if (node == NULL || (c = strcmp(nombre_linea, node->nombre)) < 0) {
+
+		trans->cant_lineas += 1;
+		tLinea * new_linea = calloc(1, sizeof(tLinea));
+
+		/* copia el nombre de la linea */
+		new_linea->nombre = malloc(strlen(nombre_linea));
+		strcpy(new_linea->nombre, nombre_linea);
+
+		new_linea->next = node;
+		*dir = new_linea;
+		return new_linea;
+	}
+
+	/* Si la linea ya existe entonces no la agrega */
+	if (c == 0) {
+		*dir = node;
+		return node;
+	}
+
+	node->next = addLinea(node->next, nombre_linea, dir);
+	return node;
+}
+
+
+int comparar_lineas(tLinea *l1, tLinea *l2){ return l2->pasajeros - l1->pasajeros; }
+
+void procesarDatos(transporteADT trans){
+
+	// Primero, completa el vector con los punteros a las líneas, que están en la lista
+	trans->lineas_ord_desc[0] = trans->lineas_ord_alpha;
+	for(int i=1; i<trans->cant_lineas; i++)
+		trans->lineas_ord_desc[i] = trans->lineas_ord_desc[i-1].next;
+
+	// Luego, aplica quicksort sobre el vector
+	qsort(trans->lineas_ord_desc, trans->cant_lineas, sizeof(*tLinea), comparar_lineas);
+
 }

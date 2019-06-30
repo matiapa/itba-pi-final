@@ -199,8 +199,8 @@ tEstacion *getEstacion(tEstacion *estacion, unsigned int id){
 	// Luego, aplica quicksort sobre el vector
 	qsort(trans->lineas_ord_desc, trans->cant_lineas, sizeof(tLinea *), (int (*)(const void *, const void *)) compararLineas);
 
-	for(int i=1; i<trans->cant_lineas; i++)
-		printf("%s %d\n", trans->lineas_ord_desc[i]->nombre, trans->lineas_ord_desc[i]->pasajeros);
+	// for(int i=1; i<trans->cant_lineas; i++)
+	// 	printf("%s %d\n", trans->lineas_ord_desc[i]->nombre, trans->lineas_ord_desc[i]->pasajeros);
 
 }
 
@@ -212,8 +212,13 @@ void calcularMaxPorLineaRec(tEstacion *estacion){
 
 	// Hace un recorrido preorder del arbol binario, actualizando el máximo de cada línea
 
-	if(estacion->pasajeros > estacion->linea->max->pasajeros)
-		estacion->linea->max = estacion;
+	if(estacion == NULL)
+		return;
+
+	printf("%d: %d\n", estacion->id, estacion->pasajeros);
+
+	// if(estacion->pasajeros > estacion->linea->max->pasajeros)
+	// 	estacion->linea->max = estacion;
 
 	calcularMaxPorLineaRec(estacion->left);
 	calcularMaxPorLineaRec(estacion->right);

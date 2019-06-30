@@ -20,4 +20,5 @@ int main(void) {
 		addEstacion(trans, id, linea, estacion);
 	}while(fgetc(archEstacion)!=EOF);
 	
+
 }

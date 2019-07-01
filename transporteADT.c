@@ -3,7 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #define BLOQUE 100
-
+#define MAX_NOMBRE_ESTACION 40
+#define MAX_NOMBRE_LINEA 40
 
 //------------------------------------
 //     DEFINICION DE STRUCTS
@@ -282,7 +283,7 @@ tLinea_con_pasajeros ** get_pasajeros_por_linea_vec(transporteADT trans)
 	{
 		tLinea_con_pasajeros * pEstructura=malloc(sizeof(tLinea_con_pasajeros));
 		vec[i]=pEstructura;
-		vec[i]->nombre_linea=malloc(40);
+		vec[i]->nombre_linea=malloc(MAX_NOMBRE_LINEA);
 		strcpy(vec[i]->nombre_linea,vec_original[i]->nombre);
 		vec[i]->pasajeros=vec_original[i]->pasajeros;
 		//crea espacio para la estructura y transcibe los datos del TAD a una estructura que se conoce publicamente
@@ -303,9 +304,9 @@ tEstacion_favorita ** get_favourite_vec(transporteADT trans)
 	for(int i=0;i<cant_lineas;i++)
 	{
 		nuevo_vec[i]=malloc(sizeof(tEstacion_favorita));
-		nuevo_vec[i]->nombre_linea=malloc(40);
+		nuevo_vec[i]->nombre_linea=malloc(MAX_NOMBRE_LINEA);
 		strcpy(nuevo_vec[i]->nombre_linea,lista->nombre);
-		nuevo_vec[i]->nombre_estacion=malloc(40);
+		nuevo_vec[i]->nombre_estacion=malloc(MAX_NOMBRE_ESTACION);
 		strcpy(nuevo_vec[i]->nombre_estacion,lista->max->nombre);
 		nuevo_vec[i]->pasajeros=lista->max->pasajeros;
 		lista=lista->next;

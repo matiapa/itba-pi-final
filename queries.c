@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "transporteADT.h"
 #define DIAS_SEMANA 7
+#define MAX_NOMBRE_LINEA 40
+#define MAX_NOMBRE_ESTACION 40
 
 void query1(transporteADT trans)
 {
@@ -17,7 +19,7 @@ void query1(transporteADT trans)
 	//escribir el header.
 
 	for (int i=0;i<cant_lineas;i++){
-		char * nombre_linea = malloc(40);
+		char * nombre_linea = malloc(MAX_NOMBRE_LINEA);
 		get_linea(nombre_linea,&pasajeros,i,trans);
 		/* si la cantidad de pasajero es 0 entonces no la imprime */
 		if (pasajeros >= 1) {

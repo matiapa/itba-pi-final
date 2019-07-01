@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void cargarEstaciones(transporteADT trans, char *archivo_estaciones){
+void cargarEstaciones(transporteADT trans, const char *archivo_estaciones){
 
 	FILE * archEstacion = fopen(archivo_estaciones, "r");
 
@@ -11,11 +11,11 @@ void cargarEstaciones(transporteADT trans, char *archivo_estaciones){
 		exit(1);
 	}
 
-	// Se saltea los encabezados
+	// Se saltea el encabezado
 	while (fgetc(archEstacion) != '\n');
 
 	/* Lectura de estaciones */
-	int id; char *linea = malloc(40), *estacion = malloc(40);
+	int id; char linea[40], estacion[40];
 
 	while (fscanf(archEstacion, "%d,%30[^,],%30[^,\n]", &id, linea, estacion) == 3) {
 		//printf("Adding %d, %s, %s\n", id, linea, estacion);
@@ -27,7 +27,7 @@ void cargarEstaciones(transporteADT trans, char *archivo_estaciones){
 }
 
 
-void cargarMolinetes(transporteADT trans, char *archivo_molinetes){
+void cargarMolinetes(transporteADT trans, const char *archivo_molinetes){
 
   FILE * archMol = fopen(archivo_molinetes, "r");
 
@@ -36,7 +36,7 @@ void cargarMolinetes(transporteADT trans, char *archivo_molinetes){
 		exit(1);
 	}
 
-	// Se saltea los encabezados
+	// Se saltea el encabezado
 	while (fgetc(archMol) != '\n');
 
 	/* Lectura de molinetes */

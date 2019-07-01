@@ -58,7 +58,9 @@ void query2(transporteADT trans)
 }
 
 void query3(transporteADT trans){
+
 	tLinea_con_pasajeros ** vec=get_pasajeros_por_linea_vec(trans);
+	printf("Ok\n");
 	tLinea_con_pasajeros * linea;
 	//recibe vecor de punteros a estructuras con la linea y cantidad de pasajeros en cada estructura a la que apunta cada elemento del vector.
 
@@ -90,8 +92,6 @@ void query3(transporteADT trans){
 	//cierra el archivo
 
 }
-
-
 
 
 void query4(transporteADT trans){

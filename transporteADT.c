@@ -44,18 +44,18 @@ typedef struct transporteCDT {
 
 
 
-//------------------------------------
-//     DECLARACION DE PROTOTIPOS
-//------------------------------------
+//----------------------------------------------------
+//     PROTOTIPOS DE FUNCIONES PROPIAS DEL TAD
+//----------------------------------------------------
 
 
-tEstacion * addEstacionRec(tEstacion * estacion, unsigned int id, char * nombre_estacion, tLinea * dir_linea);
+tEstacion * addEstacionRec(tEstacion * estacion, const unsigned int id, const char * nombre_estacion, tLinea * dir_linea);
 
-tLinea * addLinea(transporteADT trans, tLinea * node, char * nombre_linea, tLinea ** dir);
+tLinea * addLinea(transporteADT trans, tLinea * node, const char * nombre_linea, tLinea ** dir);
 
-tEstacion *getEstacion(tEstacion *estacion, unsigned int id);
+tEstacion *getEstacion(tEstacion *estacion, const unsigned int id);
 
-int compararLineas(tLinea **l1, tLinea **l2);
+int compararLineas(const tLinea **l1, const tLinea **l2);
 
 void calcularMaxPorLineaRec(tEstacion *estacion);
 
@@ -65,10 +65,9 @@ long int get_total_pasajeros(transporteADT trans);
 void get_linea(char * nombre_linea,long int * pasajeros,int pos,transporteADT trans);
 
 
+tLinea_con_pasajeros ** get_pasajeros_por_linea_vec(transporteADT trans);
 
 void get_pasajeros_dia(long int * dia,long int * noche,int i,transporteADT trans);
-
-tLinea_con_pasajeros ** get_pasajeros_por_linea_vec(transporteADT trans);
 
 tEstacion_favorita ** get_favourite_vec(transporteADT trans);
 
@@ -80,10 +79,19 @@ tEstacion_favorita ** get_favourite_vec(transporteADT trans);
 //------------------------------------
 
 
-transporteADT newTransporte(char *archivo_estaciones, char *archivo_molinetes){ return calloc(1, sizeof(transporteCDT)); }
+transporteADT newTransporte(){
+
+	transporteADT trans = calloc(1, sizeof(transporteCDT));
+	if(trans==NULL){
+		printf("Fallo al reservar memoria para crear transporteADT\n");
+		exit(1);
+	}
+
+	return  trans;
+}
 
 
-void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char * nombre_estacion) {
+void addEstacion(transporteADT trans, const unsigned int id, const char * nombre_linea, const char * nombre_estacion) {
 
 	/* Agrega la linea y guarda el puntero a la linea de la estacion */
 	tLinea * dir_linea = NULL;
@@ -98,17 +106,23 @@ void addEstacion(transporteADT trans, unsigned int id, char * nombre_linea, char
 }
 
 
-tEstacion * addEstacionRec(tEstacion * estacion, unsigned int id, char * nombre_estacion, tLinea * dir_linea) {
+tEstacion * addEstacionRec(tEstacion * estacion, const unsigned int id, const char * nombre_estacion, tLinea * dir_linea) {
 
 	if (estacion == NULL) {
 
 		tEstacion *new_estacion = calloc(1, sizeof(tEstacion));
+
+		if(new_estacion == NULL){
+			printf("Fallo al reservar memoria para almacenar estación %d", id);
+			exit(1);
+		}
 
 		// Designa los valores a la estructura de la estacion
 		new_estacion->id = id;
 		new_estacion->linea = dir_linea;
 
 		new_estacion->nombre = malloc(strlen(nombre_estacion)+1);
+		if(new_estacion == NULL){ printf("Fallo al reservar memoria para almacenar estación %d", id); exit(1); }
 		strcpy(new_estacion->nombre, nombre_estacion);
 
 		return new_estacion;
@@ -128,7 +142,7 @@ tEstacion * addEstacionRec(tEstacion * estacion, unsigned int id, char * nombre_
 }
 
 
-tLinea * addLinea(transporteADT trans, tLinea * node, char * nombre_linea, tLinea ** dir) {
+tLinea * addLinea(transporteADT trans, tLinea * node, const char * nombre_linea, tLinea ** dir) {
 
 	/* Agrega la linea en orden alfabetico */
 
@@ -138,8 +152,15 @@ tLinea * addLinea(transporteADT trans, tLinea * node, char * nombre_linea, tLine
 		trans->cant_lineas += 1;
 		tLinea * new_linea = calloc(1, sizeof(tLinea));
 
+		if(new_linea==NULL){
+			printf("Fallo al reservar memoria para agregar linea %s", nombre_linea);
+			exit(1);
+		}
+
 		/* copia el nombre de la linea */
-		new_linea->nombre = malloc(strlen(nombre_linea)+1);
+		new_linea->nombre = malloc(strlen(nombre_linea));
+		if(new_linea->nombre==NULL){ printf("Fallo al reservar memoria para agregar linea %s", nombre_linea); exit(1); }
+
 		strcpy(new_linea->nombre, nombre_linea);
 
 		new_linea->next = node;
@@ -158,7 +179,7 @@ tLinea * addLinea(transporteADT trans, tLinea * node, char * nombre_linea, tLine
 }
 
 
-void addPasajero(transporteADT trans, unsigned int d, unsigned int m, unsigned int y, unsigned int hora, unsigned int id, unsigned int cant) {
+void addPasajero(transporteADT trans, unsigned int d, unsigned int m, unsigned int y, unsigned int hora, const unsigned int id, const unsigned int cant) {
 
 	// Calcula el dia de la semana
 	int weekday  = (d += m < 3 ? y-- : y - 2, 23*m/9 + d + 4 + y/4- y/100 + y/400)%7;
@@ -178,7 +199,12 @@ void addPasajero(transporteADT trans, unsigned int d, unsigned int m, unsigned i
 }
 
 
-tEstacion *getEstacion(tEstacion *estacion, unsigned int id){
+tEstacion *getEstacion(tEstacion *estacion, const unsigned int id){
+
+	if(estacion == NULL){
+		printf("La estación %d no fue encontrada, abortando.\n", id);
+		exit(1);
+	}
 
 	if(estacion->id == id)
 		return estacion;
@@ -191,10 +217,15 @@ tEstacion *getEstacion(tEstacion *estacion, unsigned int id){
 }
 
 
- void ordenarLineasDesc(transporteADT trans){
+void ordenarLineasDesc(transporteADT trans){
 
 	// Primero, completa el vector con los punteros a las líneas, que están en la lista
 	trans->lineas_ord_desc = malloc(trans->cant_lineas*sizeof(tLinea *));
+	if(trans->lineas_ord_desc==NULL){
+		printf("Fallo al reservar memoria para crear vector de lineas descendente.\n");
+		exit(1);
+	}
+
 	trans->lineas_ord_desc[0] = trans->lineas_ord_alpha;
 	for(int i=1; i<trans->cant_lineas; i++)
 		trans->lineas_ord_desc[i] = trans->lineas_ord_desc[i-1]->next;
@@ -236,7 +267,8 @@ void calcularMaxPorLineaRec(tEstacion *estacion){
 }
 
 
-int compararLineas(tLinea **l1, tLinea **l2){	return -((*l1)->pasajeros - (*l2)->pasajeros); }
+int compararLineas(const tLinea **l1, const tLinea **l2){	return -((*l1)->pasajeros - (*l2)->pasajeros); }
+
 
 
 int get_cant_lineas(transporteADT trans){return trans->cant_lineas; }
@@ -245,27 +277,6 @@ int get_cant_lineas(transporteADT trans){return trans->cant_lineas; }
 
 long int get_total_pasajeros(transporteADT trans){return trans->pasajeros; }
 //retorna la cantidad de pasajeros total.
-
-
-void get_linea(char * nombre_linea, long int * pasajeros, int pos, transporteADT trans){
-
-	// Devuelve la cantidad de pasajeros y el nombre de la linea de el i'esimo elemento del vector de lineas en orden descendente.
-
-	strcpy(nombre_linea, trans->lineas_ord_desc[pos]->nombre);
-	*pasajeros = trans->lineas_ord_desc[pos]->pasajeros;
-
-}
-
-
-
-void get_pasajeros_dia(long int * dia,long int * noche,int i,transporteADT trans){
-	*dia=trans->vec_diurno[i];
-	*noche=trans->vec_nocturno[i];
-}
-// escribe en los punteros, la cantidad de pasajeros que transidtaron durante el dia y la noche en el dia i de la semana, con domingo siendo 0.
-
-
-
 
 
 tLinea_con_pasajeros ** get_pasajeros_por_linea_vec(transporteADT trans)
@@ -291,6 +302,26 @@ tLinea_con_pasajeros ** get_pasajeros_por_linea_vec(transporteADT trans)
 	return vec;
 	//retorna el vector nuevamente creado
 }
+
+
+
+void get_linea(char * nombre_linea, long int * pasajeros, int pos, transporteADT trans){
+
+	// Devuelve la cantidad de pasajeros y el nombre de la linea de el i'esimo elemento del vector de lineas en orden descendente.
+
+	strcpy(nombre_linea, trans->lineas_ord_desc[pos]->nombre);
+	*pasajeros = trans->lineas_ord_desc[pos]->pasajeros;
+
+}
+
+
+void get_pasajeros_dia(long int * dia,long int * noche,int i,transporteADT trans){
+	*dia=trans->vec_diurno[i];
+	*noche=trans->vec_nocturno[i];
+}
+// escribe en los punteros, la cantidad de pasajeros que transidtaron durante el dia y la noche en el dia i de la semana, con domingo siendo 0.
+
+
 
 
 

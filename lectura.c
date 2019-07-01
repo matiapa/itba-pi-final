@@ -15,7 +15,7 @@ void cargarEstaciones(transporteADT trans, char *archivo_estaciones){
 	while (fgetc(archEstacion) != '\n');
 
 	/* Lectura de estaciones */
-	int id; char *linea = malloc(44440), *estacion = malloc(44440);
+	int id; char *linea = malloc(40), *estacion = malloc(40);
 
 	while (fscanf(archEstacion, "%d,%30[^,],%30[^,\n]", &id, linea, estacion) == 3) {
 		//printf("Adding %d, %s, %s\n", id, linea, estacion);

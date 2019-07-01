@@ -4,7 +4,7 @@
 
 void query1(transporteADT trans)
 {
-	char * nombre_linea="inizialized";
+	char * nombre_linea;
         long int pasajeros;
 	int cant_lineas=get_cant_lineas(trans);
 	//conseguir cantidad de lineas de subte para saber cuantas lineas agregar al archivo.
@@ -65,7 +65,7 @@ void query3(transporteADT trans){
 	// ecribir el header del archivo.
 	for (int i=0;i<cant_lineas;i++){
 		linea=vec[i];
-		fprintf(fptr,"%s,%ld%% \n",linea->nombre_linea,(linea->pasajeros/total_pasajeros)*100);
+		fprintf(fptr,"%s,%ld%% \n",linea->nombre_linea,linea->pasajeros*100/total_pasajeros);
 
 	}
 	// agrega los valores al archivo

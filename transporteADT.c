@@ -11,7 +11,7 @@
 
 typedef struct tLinea {
 	char * nombre;
-	unsigned int pasajeros;			// Total de pasajeros
+	long int pasajeros;			// Total de pasajeros
 	struct tEstacion * max; 			// Puntero a la estacion con mas pasajeros
 	struct tLinea * next;
 } tLinea;
@@ -56,7 +56,7 @@ tEstacion *getEstacion(tEstacion *estacion, unsigned int id);
 
 int compararLineas(tLinea **l1, tLinea **l2);
 
-void calcularMaxPorLineaRec(tEstacion *estacion);
+/*void calcularMaxPorLineaRec(tEstacion *estacion);*/
 
 
 long int get_total_pasajeros(transporteADT trans);
@@ -100,7 +100,7 @@ tEstacion * addEstacionRec(tEstacion * estacion, unsigned int id, char * nombre_
 
 		tEstacion *new_estacion = calloc(1, sizeof(tEstacion));
 
-		/* Designa los valores a la estructura de la estacion */
+		// Designa los valores a la estructura de la estacion 
 		new_estacion->id = id;
 		new_estacion->pasajeros = 0;
 		new_estacion->linea = dir_linea;
@@ -162,7 +162,7 @@ void addPasajero(transporteADT trans, unsigned int d, unsigned int m, unsigned i
 	int weekday  = (d += m < 3 ? y-- : y - 2, 23*m/9 + d + 4 + y/4- y/100 + y/400)%7;
 
 	// Si la hora esta entre las 6:00 y las 17:00 lo suma al vector diurno, sino al nocturno
-	if (hora > 6000 && hora <= 1700)
+	if (hora > 0600 && hora <= 1700)
 		trans->vec_diurno[weekday] += cant;
 	else
 		trans->vec_nocturno[weekday] += cant;
@@ -203,7 +203,7 @@ tEstacion *getEstacion(tEstacion *estacion, unsigned int id){
 }
 
 
-void calcularMaxPorLinea(transporteADT trans){ calcularMaxPorLineaRec(trans->estaciones); }
+/*void calcularMaxPorLinea(transporteADT trans){ calcularMaxPorLineaRec(trans->estaciones); }
 
 
 void calcularMaxPorLineaRec(tEstacion *estacion){
@@ -216,10 +216,10 @@ void calcularMaxPorLineaRec(tEstacion *estacion){
 	calcularMaxPorLineaRec(estacion->left);
 	calcularMaxPorLineaRec(estacion->right);
 
-}
+}*/
 
 
-int compararLineas(tLinea **l1, tLinea **l2){	return (*l1)->pasajeros - (*l2)->pasajeros; }
+int compararLineas(tLinea **l1, tLinea **l2){	return -((*l1)->pasajeros - (*l2)->pasajeros); }
 
 
 int get_cant_lineas(transporteADT trans){return trans->cant_lineas; }
@@ -232,7 +232,8 @@ long int get_total_pasajeros(transporteADT trans){return trans->pasajeros; }
 
 void get_linea(char * nombre_linea,long int * pasajeros,int pos,transporteADT trans)
 {
-	nombre_linea=trans->lineas_ord_desc[pos]->nombre;
+	
+	strcpy(nombre_linea,trans->lineas_ord_desc[pos]->nombre);	
 	*pasajeros=trans->lineas_ord_desc[pos]->pasajeros;
 }
 //escribe en punteros que recibe, la cantidad de pasajeros y el nombre de la linea de el i'esimo elemento del vector decenciente de las lineas de subterraneo.

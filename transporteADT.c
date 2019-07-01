@@ -250,12 +250,8 @@ void get_linea(char * nombre_linea, long int * pasajeros, int pos, transporteADT
 
 	// Devuelve la cantidad de pasajeros y el nombre de la linea de el i'esimo elemento del vector de lineas en orden descendente.
 
-	//strcpy(nombre_linea, trans->lineas_ord_desc[pos]->nombre);
-
-	//printf("Pasajeros %d\n", trans->lineas_ord_desc[pos]->pasajeros);
+	strcpy(nombre_linea, trans->lineas_ord_desc[pos]->nombre);
 	*pasajeros = trans->lineas_ord_desc[pos]->pasajeros;
-
-	//printf("1\n");
 
 }
 

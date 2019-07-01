@@ -1,10 +1,11 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "transporteADT.h"
 #define DIAS_SEMANA 7
 
 void query1(transporteADT trans)
 {
-	char * nombre_linea;
+	char * nombre_linea = malloc(40);
   long int pasajeros=0;
 
 	int cant_lineas=get_cant_lineas(trans);
@@ -18,8 +19,8 @@ void query1(transporteADT trans)
 
 	for (int i=0;i<cant_lineas;i++){
 		get_linea(nombre_linea,&pasajeros,i,trans);
-		//printf("2\n");
 		fprintf(fptr,"%s,%ld\n", nombre_linea, pasajeros);
+		free(nombre_linea);
 	}
 	//agregar linea por linea los dats al archivo
 

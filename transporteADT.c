@@ -138,7 +138,7 @@ tLinea * addLinea(transporteADT trans, tLinea * node, char * nombre_linea, tLine
 		tLinea * new_linea = calloc(1, sizeof(tLinea));
 
 		/* copia el nombre de la linea */
-		new_linea->nombre = malloc(strlen(nombre_linea));
+		new_linea->nombre = malloc(strlen(nombre_linea)+1);
 		strcpy(new_linea->nombre, nombre_linea);
 
 		new_linea->next = node;
@@ -295,15 +295,17 @@ tLinea_con_pasajeros ** get_pasajeros_por_linea_vec(transporteADT trans)
 tEstacion_favorita ** get_favourite_vec(transporteADT trans)
 {
 	tLinea * lista=trans->lineas_ord_alpha;
-	//recuperar la lista de lineas.
-	tEstacion_favorita ** nuevo_vec=malloc(sizeof(tEstacion_favorita *));
-	//generar el vector que voy a retornar
 	int cant_lineas=get_cant_lineas(trans);
+	//recuperar la lista de lineas.
+	tEstacion_favorita ** nuevo_vec=malloc(sizeof(tEstacion_favorita *)*cant_lineas);
+	//generar el vector que voy a retornar
 	for(int i=0;i<cant_lineas;i++)
 	{
 		nuevo_vec[i]=malloc(sizeof(tEstacion_favorita));
-		nuevo_vec[i]->nombre_linea=lista->nombre;
-		nuevo_vec[i]->nombre_estacion=lista->max->nombre;
+		nuevo_vec[i]->nombre_linea=malloc(40);
+		strcpy(nuevo_vec[i]->nombre_linea,lista->nombre);
+		nuevo_vec[i]->nombre_estacion=malloc(40);
+		strcpy(nuevo_vec[i]->nombre_estacion,lista->max->nombre);
 		nuevo_vec[i]->pasajeros=lista->max->pasajeros;
 		lista=lista->next;
 	}

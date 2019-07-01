@@ -5,8 +5,7 @@
 
 void query1(transporteADT trans)
 {
-	char * nombre_linea = malloc(40);
-  long int pasajeros=0;
+ 	long int pasajeros=0;
 
 	int cant_lineas=get_cant_lineas(trans);
 	//conseguir cantidad de lineas de subte para saber cuantas lineas agregar al archivo.
@@ -18,6 +17,7 @@ void query1(transporteADT trans)
 	//escribir el header.
 
 	for (int i=0;i<cant_lineas;i++){
+		char * nombre_linea = malloc(40);
 		get_linea(nombre_linea,&pasajeros,i,trans);
 		fprintf(fptr,"%s,%ld\n", nombre_linea, pasajeros);
 		free(nombre_linea);
@@ -85,7 +85,7 @@ void query4(transporteADT trans){
 
 	//recibe un vector de punteros a estructuras con la linea, estacion y cantidad de pasajeros en cada estructura a la que apunta cada elemento del vector.
 	tEstacion_favorita ** vec=get_favourite_vec(trans);
-	tEstacion_favorita * estacion_fav;
+	tEstacion_favorita * estacion_fav=NULL;
 
 
 	int cant_lineas=get_cant_lineas(trans);

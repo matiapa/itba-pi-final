@@ -34,6 +34,6 @@ int main(int argc, char **argv) {
 	query3(trans);
 	printf("query3 terminado \n");
 
-	//query4(trans);
-
+	query4(trans);
+	printf("query4 terminado \n");
 }

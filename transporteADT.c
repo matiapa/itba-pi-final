@@ -282,7 +282,8 @@ tLinea_con_pasajeros ** get_pasajeros_por_linea_vec(transporteADT trans)
 	{
 		tLinea_con_pasajeros * pEstructura=malloc(sizeof(tLinea_con_pasajeros));
 		vec[i]=pEstructura;
-		vec[i]->nombre_linea=vec_original[i]->nombre;
+		vec[i]->nombre_linea=malloc(40);
+		strcpy(vec[i]->nombre_linea,vec_original[i]->nombre);
 		vec[i]->pasajeros=vec_original[i]->pasajeros;
 		//crea espacio para la estructura y transcibe los datos del TAD a una estructura que se conoce publicamente
 	}

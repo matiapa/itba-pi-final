@@ -71,10 +71,18 @@ void query3(transporteADT trans){
 	// ecribir el header del archivo.
 	for (int i=0;i<cant_lineas;i++){
 		linea=vec[i];
-		fprintf(fptr,"%s,%ld%% \n",linea->nombre_linea,linea->pasajeros*100/total_pasajeros);
+		if (total_pasajeros!=0)
+			fprintf(fptr,"%s,%ld%% \n",linea->nombre_linea,linea->pasajeros*100/total_pasajeros);
+		else 
+			fprintf(fptr,"%s,0%%\n",linea->nombre_linea);
+		//imprime las lineas al archivo
 
+		free(linea->nombre_linea);
+		free(linea);
+		//libera la estructura 
 	}
-	// agrega los valores al archivo
+	free (vec);
+	//libera el vector que contenia las estructuras
 
 	fclose(fptr);
 	//cierra el archivo
@@ -104,8 +112,15 @@ void query4(transporteADT trans){
 	for (int i=0;i<cant_lineas;i++){
 		estacion_fav=vec[i];
 		fprintf(fptr,"%s,%s,%ld \n",estacion_fav->nombre_estacion,estacion_fav->nombre_linea,estacion_fav->pasajeros);
+		//agregar los valores de las estructuras al archivo, iterando en el vector
+	
+		free(estacion_fav->nombre_estacion);
+		free(estacion_fav->nombre_linea);
+		free(estacion_fav);
+		//liberando la estructura
 	}
-	//agregar los valores de las estructuras al archivo, iterando en el vector
+	free(vec);
+	//liberando el vector
 
 	fclose(fptr);
 	//cerrar el archivo

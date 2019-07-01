@@ -56,7 +56,7 @@ tEstacion *getEstacion(tEstacion *estacion, unsigned int id);
 
 int compararLineas(tLinea **l1, tLinea **l2);
 
-/*void calcularMaxPorLineaRec(tEstacion *estacion);*/
+void calcularMaxPorLineaRec(tEstacion *estacion);
 
 
 long int get_total_pasajeros(transporteADT trans);
@@ -70,6 +70,9 @@ void get_pasajeros_dia(long int * dia,long int * noche,int i,transporteADT trans
 tLinea_con_pasajeros ** get_pasajeros_por_linea_vec(transporteADT trans);
 
 tEstacion_favorita ** get_favourite_vec(transporteADT trans);
+
+
+
 
 //------------------------------------
 //     FUNCIONES DEL TAD
@@ -100,9 +103,8 @@ tEstacion * addEstacionRec(tEstacion * estacion, unsigned int id, char * nombre_
 
 		tEstacion *new_estacion = calloc(1, sizeof(tEstacion));
 
-		// Designa los valores a la estructura de la estacion 
+		// Designa los valores a la estructura de la estacion
 		new_estacion->id = id;
-		new_estacion->pasajeros = 0;
 		new_estacion->linea = dir_linea;
 
 		new_estacion->nombre = malloc(strlen(nombre_estacion)+1);
@@ -205,7 +207,13 @@ tEstacion *getEstacion(tEstacion *estacion, unsigned int id){
 }
 
 
-/*void calcularMaxPorLinea(transporteADT trans){ calcularMaxPorLineaRec(trans->estaciones); }
+void calcularMaxPorLinea(transporteADT trans){
+	calcularMaxPorLineaRec(trans->estaciones);
+
+	for(int i=0; i<trans->cant_lineas; i++)
+		printf("%s %d\n", trans->lineas_ord_desc[i]->nombre, trans->lineas_ord_desc[i]->max->pasajeros);
+
+}
 
 
 void calcularMaxPorLineaRec(tEstacion *estacion){
@@ -215,15 +223,16 @@ void calcularMaxPorLineaRec(tEstacion *estacion){
 	if(estacion == NULL)
 		return;
 
-	printf("%d: %d\n", estacion->id, estacion->pasajeros);
+	//printf("Recorrido preorder: ")
+	//printf("%d ", estacion->id);
 
-	// if(estacion->pasajeros > estacion->linea->max->pasajeros)
-	// 	estacion->linea->max = estacion;
+	if(estacion->linea->max == NULL || estacion->pasajeros > estacion->linea->max->pasajeros)
+	 	estacion->linea->max = estacion;
 
 	calcularMaxPorLineaRec(estacion->left);
 	calcularMaxPorLineaRec(estacion->right);
 
-}*/
+}
 
 
 int compararLineas(tLinea **l1, tLinea **l2){	return -((*l1)->pasajeros - (*l2)->pasajeros); }
@@ -239,8 +248,8 @@ long int get_total_pasajeros(transporteADT trans){return trans->pasajeros; }
 
 void get_linea(char * nombre_linea,long int * pasajeros,int pos,transporteADT trans)
 {
-	
-	strcpy(nombre_linea,trans->lineas_ord_desc[pos]->nombre);	
+
+	strcpy(nombre_linea,trans->lineas_ord_desc[pos]->nombre);
 	*pasajeros=trans->lineas_ord_desc[pos]->pasajeros;
 }
 //escribe en punteros que recibe, la cantidad de pasajeros y el nombre de la linea de el i'esimo elemento del vector decenciente de las lineas de subterraneo.

@@ -22,17 +22,17 @@ int main(int argc, char **argv) {
 	ordenarLineasDesc(trans);
 	calcularMaxPorLinea(trans);
 
-	//
-	// printf("Carga de datos completa \n");
-	//
-	// query1(trans);
-	// printf("query1 terminado \n");
-	//
-	// query2(trans);
-	// printf("query2 terminado \n");
-	//
-	// query3(trans);
-	// printf("query3 terminado \n");
+
+	printf("Carga de datos completa \n");
+
+	query1(trans);
+	printf("query1 terminado \n");
+
+	query2(trans);
+	printf("query2 terminado \n");
+
+	query3(trans);
+	printf("query3 terminado \n");
 
 	//query4(trans);
 

@@ -210,8 +210,8 @@ tEstacion *getEstacion(tEstacion *estacion, unsigned int id){
 void calcularMaxPorLinea(transporteADT trans){
 	calcularMaxPorLineaRec(trans->estaciones);
 
-	for(int i=0; i<trans->cant_lineas; i++)
-		printf("%s %d\n", trans->lineas_ord_desc[i]->nombre, trans->lineas_ord_desc[i]->max->pasajeros);
+	// for(int i=0; i<trans->cant_lineas; i++)
+	// 	printf("%s %d\n", trans->lineas_ord_desc[i]->nombre, trans->lineas_ord_desc[i]->max->pasajeros);
 
 }
 
@@ -246,13 +246,18 @@ long int get_total_pasajeros(transporteADT trans){return trans->pasajeros; }
 //retorna la cantidad de pasajeros total.
 
 
-void get_linea(char * nombre_linea,long int * pasajeros,int pos,transporteADT trans)
-{
+void get_linea(char * nombre_linea, long int * pasajeros, int pos, transporteADT trans){
 
-	strcpy(nombre_linea,trans->lineas_ord_desc[pos]->nombre);
-	*pasajeros=trans->lineas_ord_desc[pos]->pasajeros;
+	// Devuelve la cantidad de pasajeros y el nombre de la linea de el i'esimo elemento del vector de lineas en orden descendente.
+
+	//strcpy(nombre_linea, trans->lineas_ord_desc[pos]->nombre);
+
+	//printf("Pasajeros %d\n", trans->lineas_ord_desc[pos]->pasajeros);
+	*pasajeros = trans->lineas_ord_desc[pos]->pasajeros;
+
+	//printf("1\n");
+
 }
-//escribe en punteros que recibe, la cantidad de pasajeros y el nombre de la linea de el i'esimo elemento del vector decenciente de las lineas de subterraneo.
 
 
 

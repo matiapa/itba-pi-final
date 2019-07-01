@@ -19,7 +19,10 @@ void query1(transporteADT trans)
 	for (int i=0;i<cant_lineas;i++){
 		char * nombre_linea = malloc(40);
 		get_linea(nombre_linea,&pasajeros,i,trans);
-		fprintf(fptr,"%s,%ld\n", nombre_linea, pasajeros);
+		/* si la cantidad de pasajero es 0 entonces no la imprime */
+		if (pasajeros >= 1) {
+			fprintf(fptr,"%s,%ld\n", nombre_linea, pasajeros);
+		}
 		free(nombre_linea);
 	}
 	//agregar linea por linea los dats al archivo

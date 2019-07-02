@@ -10,7 +10,7 @@ void query1(transporteADT trans){
 	int cant_lineas=get_cant_lineas(trans);
 
   // Generar el archivo
-	FILE *fptr=fopen("out/query1.csv","w");
+	FILE *fptr=fopen("query1.csv","w");
   if (fptr == NULL) {
 		printf("No se pudo crear el archivo query1.csv\n");
 		exit(1);
@@ -40,7 +40,7 @@ void query2(transporteADT trans){
 	long int dia,noche;
 
   // Generar el archivo
-	FILE *fptr=fopen("out/query2.csv","w");
+	FILE *fptr=fopen("query2.csv","w");
   if (fptr == NULL) {
     printf("No se pudo crear el archivo query2.csv\n");
     exit(1);
@@ -70,7 +70,7 @@ void query3(transporteADT trans){
 	int cant_lineas=get_cant_lineas(trans);
 
   // Genera el archivo a escribir.
-	FILE *fptr=fopen("out/query3.csv","w");
+	FILE *fptr=fopen("query3.csv","w");
   if (fptr == NULL) {
     printf("No se pudo crear el archivo query3.csv\n");
     exit(1);
@@ -112,7 +112,7 @@ void query4(transporteADT trans){
 	int cant_lineas=get_cant_lineas(trans);
 
   // Genera el archivo
-	FILE *fptr=fopen("out/query4.csv","w");
+	FILE *fptr=fopen("query4.csv","w");
   if (fptr == NULL) {
     printf("No se pudo crear el archivo query3.csv\n");
     exit(1);

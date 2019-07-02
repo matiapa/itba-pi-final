@@ -60,7 +60,9 @@ void postorderExecute(tEstacion *estacion, void (*execute)(tEstacion *));
 
 void calcularMax(tEstacion *estacion);
 
-void freeListaLineas(tLinea *linea);
+void freeLinea(tLinea *linea);
+
+void freeEstacion(tEstacion *estacion);
 
 
 //-------------------------------------------------------------------
@@ -259,34 +261,34 @@ void postorderExecute(tEstacion *estacion, void (*execute)(tEstacion *)){
 		printf("E%d " estacion->id);
 	#endif
 
-	execute(estacion);
-
 	postorderExecute(estacion->left, execute);
 	postorderExecute(estacion->right, execute);
+
+	execute(estacion);
 
 }
 
 
 void freeTransporte(transporteADT trans){
 
-	freeListaLineas(trans->lineas_ord_alpha);
-
 	for(int i=0; i<trans->cant_lineas; i++)
-		free(trans->lineas_ord_desc[i]);
+		freeLinea(trans->lineas_ord_desc[i]);
+	free(trans->lineas_ord_desc);
 
-	postorderExecute(trans->estaciones, (void (*)(tEstacion *)) free);
+	postorderExecute(trans->estaciones, (void (*)(tEstacion *)) freeEstacion);
 
 	free(trans);
-	
+
 }
 
-
-void freeListaLineas(tLinea *linea){
-
-	if(linea->next!=NULL)
-		freeListaLineas(linea->next);
-
+void freeLinea(tLinea *linea){
+	free(linea->nombre);
 	free(linea);
+}
+
+void freeEstacion(tEstacion *estacion){
+	free(estacion->nombre);
+	free(estacion);
 }
 
 

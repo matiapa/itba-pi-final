@@ -125,7 +125,7 @@ void query4(transporteADT trans){
 		estacion_fav=vec[i];
 
     // Agrega los valores de las estructuras al archivo, iterando en el vector
-		fprintf(fptr,"%s, %ld\n", estacion_fav->nombre_estacion, estacion_fav->pasajeros);
+		fprintf(fptr,"%s,%s,%ld\n", estacion_fav->nombre_estacion, estacion_fav->nombre_linea, estacion_fav->pasajeros);
 
     // Libera la estructura
 		free(estacion_fav->nombre_estacion);

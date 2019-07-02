@@ -37,4 +37,8 @@ int main(int argc, char **argv) {
 
 	query4(trans);
 	printf("> Query 4 terminado \n");
+
+	freeTransporte(trans);
+	printf("> Completado\n");
+	
 }

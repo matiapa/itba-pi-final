@@ -274,8 +274,10 @@ void freeTransporte(transporteADT trans){
 	for(int i=0; i<trans->cant_lineas; i++)
 		free(trans->lineas_ord_desc[i]);
 
-	//preorderExecute(trans->estaciones, free);
+	postorderExecute(trans->estaciones, (void (*)(tEstacion *)) free);
 
+	free(trans);
+	
 }
 
 
@@ -285,7 +287,6 @@ void freeListaLineas(tLinea *linea){
 		freeListaLineas(linea->next);
 
 	free(linea);
-
 }
 
 

@@ -1,3 +1,4 @@
 *.exe
-.ftpconfig
+*.out
 *.csv
+.ftpconfig

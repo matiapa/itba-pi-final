@@ -33,6 +33,8 @@ void ordenarLineasDesc(transporteADT trans);
 
 void calcularMaxPorLinea(transporteADT trans);
 
+void freeTransporte(transporteADT trans);
+
 
 int get_cant_lineas(const transporteADT trans);
 

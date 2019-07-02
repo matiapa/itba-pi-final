@@ -2,6 +2,7 @@
 
 #define TRANSPORTEADT_H
 
+#define DIAS_SEMANA 7
 
 typedef struct transporteCDT * transporteADT;
 
@@ -20,6 +21,7 @@ typedef struct tEstacion_favorita{
 
 // estructura de intercambio entre el TAD y el front end del query 4.
 
+void *smalloc(int bytes, char *err_msg);
 
 transporteADT newTransporte();
 
@@ -32,16 +34,16 @@ void ordenarLineasDesc(transporteADT trans);
 void calcularMaxPorLinea(transporteADT trans);
 
 
-int get_cant_lineas(transporteADT trans);
+int get_cant_lineas(const transporteADT trans);
 
-long int get_total_pasajeros(transporteADT trans);
+void get_linea(char ** nombre_linea, long int * pasajeros, const int pos, const transporteADT trans);
 
-void get_linea(char * nombre_linea,long int * pasajeros,int pos,transporteADT trans);
+void get_pasajeros_dia(long int * dia,long int * noche, const int i, const transporteADT trans);
 
-void get_pasajeros_dia(long int * dia,long int * noche,int i,transporteADT trans);
+tLinea_con_pasajeros ** get_pasajeros_por_linea(const transporteADT trans);
 
-tLinea_con_pasajeros ** get_pasajeros_por_linea_vec(transporteADT trans);
+long int get_total_pasajeros(const transporteADT trans);
 
-tEstacion_favorita ** get_favourite_vec(transporteADT trans);
+tEstacion_favorita ** get_favourite_vec(const transporteADT trans);
 
 #endif

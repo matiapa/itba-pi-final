@@ -2,9 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 #define BLOQUE 100
-#define MAX_NOMBRE_ESTACION 40
-#define MAX_NOMBRE_LINEA 40
 
 //------------------------------------
 //     DEFINICION DE STRUCTS
@@ -37,8 +36,8 @@ typedef struct transporteCDT {
 	unsigned int cant_estaciones;
 
 	long int pasajeros;					// Total de pasajeros
-	unsigned int vec_diurno[7];			// Cantidad de pasajeros por día de la semana en período diurno, la primer posición es domingo
-	unsigned int vec_nocturno[7];
+	unsigned int vec_diurno[DIAS_SEMANA];			// Cantidad de pasajeros por día de la semana en período diurno, la primer posición es domingo
+	unsigned int vec_nocturno[DIAS_SEMANA];
 
 }transporteCDT;
 
@@ -60,33 +59,40 @@ int compararLineas(const tLinea **l1, const tLinea **l2);
 void calcularMaxPorLineaRec(tEstacion *estacion);
 
 
-long int get_total_pasajeros(transporteADT trans);
-
-void get_linea(char * nombre_linea,long int * pasajeros,int pos,transporteADT trans);
-
-
-tLinea_con_pasajeros ** get_pasajeros_por_linea_vec(transporteADT trans);
-
-void get_pasajeros_dia(long int * dia,long int * noche,int i,transporteADT trans);
-
-tEstacion_favorita ** get_favourite_vec(transporteADT trans);
-
-
-
 
 //------------------------------------
 //     FUNCIONES DEL TAD
 //------------------------------------
 
+void *smalloc(int bytes, char *err_msg){
 
-transporteADT newTransporte(){
+	void *address = malloc(bytes);
 
-	transporteADT trans = calloc(1, sizeof(transporteCDT));
-	if(trans==NULL){
-		printf("Fallo al reservar memoria para crear transporteADT\n");
+	if(address==NULL || errno==ENOMEM){
+		printf("%s", err_msg);
 		exit(1);
 	}
 
+	return address;
+
+}
+
+void *scalloc(int cant, int bytes, char *err_msg){
+
+	void *address = calloc(cant, bytes);
+
+	if(address==NULL || errno==ENOMEM){
+		printf("%s", err_msg);
+		exit(1);
+	}
+
+	return address;
+
+}
+
+
+transporteADT newTransporte(){
+	transporteADT trans = scalloc(1, sizeof(transporteCDT), "Fallo al reservar memoria para crear transporteADT\n");
 	return  trans;
 }
 
@@ -110,19 +116,13 @@ tEstacion * addEstacionRec(tEstacion * estacion, const unsigned int id, const ch
 
 	if (estacion == NULL) {
 
-		tEstacion *new_estacion = calloc(1, sizeof(tEstacion));
-
-		if(new_estacion == NULL){
-			printf("Fallo al reservar memoria para almacenar estación %d", id);
-			exit(1);
-		}
+		tEstacion *new_estacion = scalloc(1, sizeof(tEstacion), "Fallo al reservar memoria para almacenar estacion");
 
 		// Designa los valores a la estructura de la estacion
 		new_estacion->id = id;
 		new_estacion->linea = dir_linea;
 
-		new_estacion->nombre = malloc(strlen(nombre_estacion)+1);
-		if(new_estacion == NULL){ printf("Fallo al reservar memoria para almacenar estación %d", id); exit(1); }
+		new_estacion->nombre = smalloc(strlen(nombre_estacion)+1, "Fallo al reservar memoria para almacenar estacion");
 		strcpy(new_estacion->nombre, nombre_estacion);
 
 		return new_estacion;
@@ -150,16 +150,10 @@ tLinea * addLinea(transporteADT trans, tLinea * node, const char * nombre_linea,
 	if (node == NULL || (c = strcmp(nombre_linea, node->nombre)) < 0) {
 
 		trans->cant_lineas += 1;
-		tLinea * new_linea = calloc(1, sizeof(tLinea));
-
-		if(new_linea==NULL){
-			printf("Fallo al reservar memoria para agregar linea %s", nombre_linea);
-			exit(1);
-		}
+		tLinea * new_linea = scalloc(1, sizeof(tLinea), "Fallo al reservar memoria para agregar linea\n");
 
 		/* copia el nombre de la linea */
-		new_linea->nombre = malloc(strlen(nombre_linea));
-		if(new_linea->nombre==NULL){ printf("Fallo al reservar memoria para agregar linea %s", nombre_linea); exit(1); }
+		new_linea->nombre = smalloc(strlen(nombre_linea), "Fallo al reservar memoria para agregar linea\n");
 
 		strcpy(new_linea->nombre, nombre_linea);
 
@@ -220,11 +214,7 @@ tEstacion *getEstacion(tEstacion *estacion, const unsigned int id){
 void ordenarLineasDesc(transporteADT trans){
 
 	// Primero, completa el vector con los punteros a las líneas, que están en la lista
-	trans->lineas_ord_desc = malloc(trans->cant_lineas*sizeof(tLinea *));
-	if(trans->lineas_ord_desc==NULL){
-		printf("Fallo al reservar memoria para crear vector de lineas descendente.\n");
-		exit(1);
-	}
+	trans->lineas_ord_desc = smalloc(trans->cant_lineas*sizeof(tLinea *), "Fallo al reservar memoria para crear vector de lineas descendente.\n");
 
 	trans->lineas_ord_desc[0] = trans->lineas_ord_alpha;
 	for(int i=1; i<trans->cant_lineas; i++)
@@ -271,79 +261,77 @@ int compararLineas(const tLinea **l1, const tLinea **l2){	return -((*l1)->pasaje
 
 
 
-int get_cant_lineas(transporteADT trans){return trans->cant_lineas; }
-//retorna la cantidad de lineas de subterraneo.
+
+int get_cant_lineas(const transporteADT trans){return trans->cant_lineas; }
 
 
-long int get_total_pasajeros(transporteADT trans){return trans->pasajeros; }
-//retorna la cantidad de pasajeros total.
+void get_linea(char ** nombre_linea, long int * pasajeros, const int pos, const transporteADT trans){
 
+	// Devuelve la cantidad de pasajeros y el nombre de la linea de el i'esimo elemento del vector de lineas en orden descendente
+	*nombre_linea = smalloc(strlen(trans->lineas_ord_desc[pos]->nombre), "Fallo al reservar memoria en get_linea()\n");
 
-tLinea_con_pasajeros ** get_pasajeros_por_linea_vec(transporteADT trans)
-{
-
-	tLinea ** vec_original=trans->lineas_ord_desc;
-
-	//recupero el vector con las lineas de subte ordenadas decendientemente
-
-	int cant_lineas=get_cant_lineas(trans);
-	tLinea_con_pasajeros ** vec=malloc(sizeof(tLinea_con_pasajeros*)*cant_lineas);
-	//genero el vector en el que voy a guardar los datos
-
-	for (int i=0;i<cant_lineas;i++)
-	{
-		tLinea_con_pasajeros * pEstructura=malloc(sizeof(tLinea_con_pasajeros));
-		vec[i]=pEstructura;
-		vec[i]->nombre_linea=malloc(MAX_NOMBRE_LINEA);
-		strcpy(vec[i]->nombre_linea,vec_original[i]->nombre);
-		vec[i]->pasajeros=vec_original[i]->pasajeros;
-		//crea espacio para la estructura y transcibe los datos del TAD a una estructura que se conoce publicamente
-	}
-	return vec;
-	//retorna el vector nuevamente creado
-}
-
-
-
-void get_linea(char * nombre_linea, long int * pasajeros, int pos, transporteADT trans){
-
-	// Devuelve la cantidad de pasajeros y el nombre de la linea de el i'esimo elemento del vector de lineas en orden descendente.
-
-	strcpy(nombre_linea, trans->lineas_ord_desc[pos]->nombre);
+	strcpy(*nombre_linea, trans->lineas_ord_desc[pos]->nombre);
 	*pasajeros = trans->lineas_ord_desc[pos]->pasajeros;
 
 }
 
 
-void get_pasajeros_dia(long int * dia,long int * noche,int i,transporteADT trans){
+// Escribe en los punteros, la cantidad de pasajeros que transidtaron durante el dia y la noche en el dia i de la semana, con domingo siendo 0.
+void get_pasajeros_dia(long int * dia, long int * noche, const int i, const transporteADT trans){
 	*dia=trans->vec_diurno[i];
 	*noche=trans->vec_nocturno[i];
 }
-// escribe en los punteros, la cantidad de pasajeros que transidtaron durante el dia y la noche en el dia i de la semana, con domingo siendo 0.
 
 
+tLinea_con_pasajeros ** get_pasajeros_por_linea(const transporteADT trans){
 
-
-
-tEstacion_favorita ** get_favourite_vec(transporteADT trans)
-{
-	tLinea * lista=trans->lineas_ord_alpha;
+	// Recupera el vector con las lineas de subte ordenadas decendentemente
+	tLinea ** lineas_original=trans->lineas_ord_desc;
 	int cant_lineas=get_cant_lineas(trans);
-	//recuperar la lista de lineas.
-	tEstacion_favorita ** nuevo_vec=malloc(sizeof(tEstacion_favorita *)*cant_lineas);
-	//generar el vector que voy a retornar
+
+	// Genera el vector en el que se guardaran las lineas
+	tLinea_con_pasajeros ** lineas=smalloc(sizeof(tLinea_con_pasajeros*)*cant_lineas, "Fallo al reservar memoria en get_pasajeros_por_linea\n");
+
+	// Copia las lineas del vector original al nuevo vector de estructuras conocidas publicamente
+	for (int i=0;i<cant_lineas;i++){
+
+		lineas[i] = smalloc(sizeof(tLinea_con_pasajeros), "Fallo al reservar memoria en get_pasajeros_por_linea\n");
+
+		lineas[i]->nombre_linea=smalloc(strlen(lineas_original[i]->nombre), "Fallo al reservar memoria en get_pasajeros_por_linea");
+		strcpy(lineas[i]->nombre_linea, lineas_original[i]->nombre);
+
+		lineas[i]->pasajeros=lineas_original[i]->pasajeros;
+	}
+
+	return lineas;
+}
+
+
+long int get_total_pasajeros(const transporteADT trans){return trans->pasajeros; }
+
+
+tEstacion_favorita ** get_favourite_vec(transporteADT trans){
+
+	tLinea * lineas=trans->lineas_ord_alpha;
+	int cant_lineas=get_cant_lineas(trans);
+
+	tEstacion_favorita ** estaciones_favs=smalloc(sizeof(tEstacion_favorita *)*cant_lineas, "Fallo al reservar memoria en get_favourite_vec");
+
+	// Transcribe los datos de la estructura del TAD al la nueva estructura generada conocida publicamente.
 	for(int i=0;i<cant_lineas;i++)
 	{
-		nuevo_vec[i]=malloc(sizeof(tEstacion_favorita));
-		nuevo_vec[i]->nombre_linea=malloc(MAX_NOMBRE_LINEA);
-		strcpy(nuevo_vec[i]->nombre_linea,lista->nombre);
-		nuevo_vec[i]->nombre_estacion=malloc(MAX_NOMBRE_ESTACION);
-		strcpy(nuevo_vec[i]->nombre_estacion,lista->max->nombre);
-		nuevo_vec[i]->pasajeros=lista->max->pasajeros;
-		lista=lista->next;
-	}
-	//transcribir los datos de la estructura del TAD al la nueva estructura generada.
+		estaciones_favs[i]=smalloc(sizeof(tEstacion_favorita), "Fallo al reservar memoria en get_favourite_vec");
 
-	return nuevo_vec;
+		estaciones_favs[i]->nombre_linea=smalloc(strlen(lineas->nombre), "Fallo al reservar memoria en get_favourite_vec");
+		strcpy(estaciones_favs[i]->nombre_linea, lineas->nombre);
+
+		estaciones_favs[i]->nombre_estacion=smalloc(40, "Fallo al reservar memoria en get_favourite_vec");
+		strcpy(estaciones_favs[i]->nombre_estacion, lineas->max->nombre);
+
+		estaciones_favs[i]->pasajeros=lineas->max->pasajeros;
+		lineas=lineas->next;
+	}
+
+	return estaciones_favs;
 	//retornar el vector de punetros con la info pertinente.
 }

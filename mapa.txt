@@ -2,46 +2,50 @@ main.c
 |
 |-> main
     |
-    |-> cargarEstaciones();
-    |-> cargarMolinetes();
+    |-> cargarEstaciones (lectura.c)
+    |-> cargarMolinetes (lectura.c)
     |
-    |-> ordenarLineasDesc();
-    |-> calcularMaxPorLinea();
+    |-> ordenarLineasDesc (transporteADT.c)
+    |-> calcularMaxPorLinea (transporteADT.c)
     |
-    |-> query1();
-    |-> query2();
-    |-> query3();
-    |-> query4();
+    |-> query1 (queries.c)
+    |-> query2 (queries.c)
+    |-> query3 (queries.c)
+    |-> query4 (queries.c)
 
 
 lectura.c
 |
 |-> cargarEstaciones
 |   |
-|   |-> addEstacion();
+|   |-> addEstacion (transporteADT.c)
 |
 |-> cargarMolinetes
     |
-    |-> addPasajero();
+    |-> addPasajero (transporteADT.c)
 
 
 queries.c
 |
 |-> query1
 |   |
-|   |->
+|   |-> get_cant_lineas  (transporteADT.c)
+|   |-> get_linea (transporteADT.c)
 |
-|-> query1
+|-> query2
 |   |
-|   |->
+|   |-> get_pasajeros_dia (transporteADT.c)
 |
 |-> query3
 |   |
-|   |->
+|   |-> get_pasajeros_por_linea (transporteADT.c)
+|   |-> get_total_pasajeros (transporteADT.c)
+|   |-> get_cant_lineas (transporteADT.c)
 |
 |-> query4
     |
-    |->
+    |-> get_favourite_vec (transporteADT.c)
+    |-> get_cant_lineas (transporteADT.c)
 
 
 transporteADT.c

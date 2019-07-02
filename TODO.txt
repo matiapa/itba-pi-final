@@ -4,8 +4,6 @@ hacer funciones de free del TAD
 
 revisar los includes y hacecr el def undef
 
-rehacer las sumas para hacerlas no cuando se agrega un pasajero sino cuando ya termino
-
 revisar los comentarios y borrar los prints de testeo (en vez de comentarlos)
 
 terminar documentacion.

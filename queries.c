@@ -60,7 +60,6 @@ void query2(transporteADT trans)
 void query3(transporteADT trans){
 
 	tLinea_con_pasajeros ** vec=get_pasajeros_por_linea_vec(trans);
-	printf("Ok\n");
 	tLinea_con_pasajeros * linea;
 	//recibe vecor de punteros a estructuras con la linea y cantidad de pasajeros en cada estructura a la que apunta cada elemento del vector.
 
@@ -71,19 +70,22 @@ void query3(transporteADT trans){
 	FILE *fptr=fopen("query3.csv","w");
 	//generar el archivo a escribir.
 
+
 	fprintf(fptr,"Línea,Porcentaje \n");
 	// ecribir el header del archivo.
 	for (int i=0;i<cant_lineas;i++){
 		linea=vec[i];
-		if (total_pasajeros!=0)
-			fprintf(fptr,"%s,%ld%% \n",linea->nombre_linea,linea->pasajeros*100/total_pasajeros);
-		else 
+
+		if (total_pasajeros!=0){
+      double perc = ((double)linea->pasajeros) / ((double) total_pasajeros) * 100;
+			fprintf(fptr,"%s,%g%% \n",linea->nombre_linea, perc);
+		}else
 			fprintf(fptr,"%s,0%%\n",linea->nombre_linea);
 		//imprime las lineas al archivo
 
 		free(linea->nombre_linea);
 		free(linea);
-		//libera la estructura 
+		//libera la estructura
 	}
 	free (vec);
 	//libera el vector que contenia las estructuras
@@ -115,7 +117,7 @@ void query4(transporteADT trans){
 		estacion_fav=vec[i];
 		fprintf(fptr,"%s,%s,%ld \n",estacion_fav->nombre_estacion,estacion_fav->nombre_linea,estacion_fav->pasajeros);
 		//agregar los valores de las estructuras al archivo, iterando en el vector
-	
+
 		free(estacion_fav->nombre_estacion);
 		free(estacion_fav->nombre_linea);
 		free(estacion_fav);

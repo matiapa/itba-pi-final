@@ -84,8 +84,8 @@ void query3(transporteADT trans){
 		linea=vec[i];
 
 		if (total_pasajeros!=0){
-      double perc = ((double)linea->pasajeros) / ((double) total_pasajeros) * 100;
-			fprintf(fptr,"%s,%g%% \n",linea->nombre_linea, perc);
+      int long perc = linea->pasajeros * 100 /  total_pasajeros;
+			fprintf(fptr,"%s,%ld%% \n",linea->nombre_linea, perc);
 		}else
 			fprintf(fptr,"%s,0%%\n",linea->nombre_linea);
 

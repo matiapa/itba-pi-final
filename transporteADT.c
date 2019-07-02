@@ -54,19 +54,18 @@ tLinea * addLinea(transporteADT trans, tLinea * node, const char * nombre_linea,
 
 tEstacion *getEstacion(tEstacion *estacion, const unsigned int id);
 
+void calcularMax(tEstacion *estacion);
+
 int compararLineas(const tLinea **l1, const tLinea **l2);
 
+void sumaPasajerosLinea(tEstacion * estacion);
+
 void postorderExecute(tEstacion *estacion, void (*execute)(tEstacion *));
-
-void sumaPasajeros(transporteADT trans); 
-
-void calcularMax(tEstacion *estacion);
 
 void freeLinea(tLinea *linea);
 
 void freeEstacion(tEstacion *estacion);
 
-void sumaPasajeros(tEstacion * estacion);
 
 
 //-------------------------------------------------------------------
@@ -194,10 +193,9 @@ void addPasajero(transporteADT trans, unsigned int d, unsigned int m, unsigned i
 	else
 		trans->vec_nocturno[weekday] += cant;
 
-	// Incrementa la cantidad de pasajeros de esa estacion, linea y total
+	// Incrementa la cantidad de pasajeros de esa estacion
 	tEstacion *estacion = getEstacion(trans->estaciones, id);
 	estacion->pasajeros += cant;
-	trans->pasajeros += cant;
 
 }
 
@@ -253,15 +251,21 @@ void calcularMax(tEstacion *estacion){
 	 	estacion->linea->max = estacion;
 }
 
-void sumaPasajeros(transporteADT trans, void (*) {
-	postorderExecute(trans->root, (void (*)(tEstacion *))sumaPasajerosLinea);
 
-	tLinea * node = trans->lineas_orden_alpha;
+void sumaPasajeros(transporteADT trans){
+
+	postorderExecute(trans->estaciones, (void (*)(tEstacion *)) sumaPasajerosLinea);
+
+	tLinea * node = trans->lineas_ord_alpha;
 	while (node != NULL) {
 		trans->pasajeros += node->pasajeros;
 		node = node->next;
 	}
+	
 }
+
+
+void sumaPasajerosLinea(tEstacion * estacion) { estacion->linea->pasajeros += estacion->pasajeros; }
 
 
 // Hace un recorrido preorder del arbol binario de estaciones, ejecutando execute sobre cada estación
@@ -294,19 +298,18 @@ void freeTransporte(transporteADT trans){
 
 }
 
+
 void freeLinea(tLinea *linea){
 	free(linea->nombre);
 	free(linea);
 }
+
 
 void freeEstacion(tEstacion *estacion){
 	free(estacion->nombre);
 	free(estacion);
 }
 
-void sumaPasajerosLinea(tEstacion * estacion) {
-	estacion->linea->pasajeros += estacion->pasajeros;
-}
 
 
 //-----------------------------------------------------

@@ -22,6 +22,7 @@ int main(int argc, char **argv) {
 	// Procesamiento de datos
 	ordenarLineasDesc(trans);
 	calcularMaxPorLinea(trans);
+	sumaPasajeros(trans);
 
 	printf("> Procesamiento completado\n");
 
@@ -40,5 +41,5 @@ int main(int argc, char **argv) {
 
 	freeTransporte(trans);
 	printf("> Completado\n");
-	
+
 }

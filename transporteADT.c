@@ -54,15 +54,16 @@ tLinea * addLinea(transporteADT trans, tLinea * node, const char * nombre_linea,
 
 tEstacion *getEstacion(tEstacion *estacion, const unsigned int id);
 
+void calcularMax(tEstacion *estacion);
+
 int compararLineas(const tLinea **l1, const tLinea **l2);
 
 void postorderExecute(tEstacion *estacion, void (*execute)(tEstacion *));
 
-void calcularMax(tEstacion *estacion);
-
 void freeLinea(tLinea *linea);
 
 void freeEstacion(tEstacion *estacion);
+
 
 
 //-------------------------------------------------------------------
@@ -190,12 +191,11 @@ void addPasajero(transporteADT trans, unsigned int d, unsigned int m, unsigned i
 	else
 		trans->vec_nocturno[weekday] += cant;
 
-	// Incrementa la cantidad de pasajeros de esa estacion, linea y total
+	// Incrementa la cantidad de pasajeros de la estacion, linea y total
 	tEstacion *estacion = getEstacion(trans->estaciones, id);
 	estacion->pasajeros += cant;
 	estacion->linea->pasajeros += cant;
 	trans->pasajeros += cant;
-
 }
 
 
@@ -281,15 +281,18 @@ void freeTransporte(transporteADT trans){
 
 }
 
+
 void freeLinea(tLinea *linea){
 	free(linea->nombre);
 	free(linea);
 }
 
+
 void freeEstacion(tEstacion *estacion){
 	free(estacion->nombre);
 	free(estacion);
 }
+
 
 
 //-----------------------------------------------------
@@ -359,7 +362,7 @@ tEstacion_favorita ** get_favourite_vec(transporteADT trans){
 		estaciones_favs[i]->nombre_linea=smalloc(strlen(lineas->nombre)+1, "Fallo al reservar memoria en get_favourite_vec");
 		strcpy(estaciones_favs[i]->nombre_linea, lineas->nombre);
 
-		estaciones_favs[i]->nombre_estacion=smalloc(40, "Fallo al reservar memoria en get_favourite_vec");
+		estaciones_favs[i]->nombre_estacion=smalloc(strlen(lineas->max->nombre)+1, "Fallo al reservar memoria en get_favourite_vec");
 		strcpy(estaciones_favs[i]->nombre_estacion, lineas->max->nombre);
 
 		estaciones_favs[i]->pasajeros=lineas->max->pasajeros;

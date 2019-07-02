@@ -1,17 +1,19 @@
 #ifndef TRANSPORTEADT_H
-
 #define TRANSPORTEADT_H
 
 #define DIAS_SEMANA 7
 
 typedef struct transporteCDT * transporteADT;
 
+// Estructura de intercambio entre el TAD y el fron end del query 3.
+
 typedef struct tLinea_con_pasajeros{
 	char * nombre_linea;
 	long int pasajeros;
 }tLinea_con_pasajeros;
 
-//estructura de intercambio entre el TAD y el fron end del query 3.
+
+// Estructura de intercambio entre el TAD y el front end del query 4.
 
 typedef struct tEstacion_favorita{
 	char * nombre_linea;
@@ -19,7 +21,6 @@ typedef struct tEstacion_favorita{
 	char * nombre_estacion;
 }tEstacion_favorita;
 
-// estructura de intercambio entre el TAD y el front end del query 4.
 
 void *smalloc(int bytes, char *err_msg);
 

@@ -24,6 +24,7 @@ int main(int argc, char **argv) {
 	calcularMaxPorLinea(trans);
 	
 
+
 	printf("> Procesamiento completado\n");
 
 
@@ -41,5 +42,5 @@ int main(int argc, char **argv) {
 
 	freeTransporte(trans);
 	printf("> Completado\n");
-	
+
 }

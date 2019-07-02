@@ -1,13 +1,3 @@
-cosas que faltan hacer;
+- Borrar los printf comentados (FINAL)
 
-hacer funciones de free del TAD
-
-revisar los includes y hacecr el def undef
-
-revisar los comentarios y borrar los prints de testeo (en vez de comentarlos)
-
-terminar documentacion.
-
-
-- Agregar preprocessor flag DEBUG para los printf comentados
-- Revisar get_favourite_vec, hay un 40 de los que no pude reemplazar por strlen porque tiraba seg. fault
+- Terminar documentacion (FINAL)

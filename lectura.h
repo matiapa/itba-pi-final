@@ -1,5 +1,5 @@
-#ifndef __LECTURA_H_
-#define __LECTURA_H_
+#ifndef LECTURA_H
+#define LECTURA_H
 
 void cargarEstaciones(transporteADT trans, const char * archivo_estaciones);
 

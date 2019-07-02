@@ -1,9 +1,3 @@
-- Rehacer las sumas para hacerlas no cuando se agrega un pasajero sino cuando ya termino (INÉS)
-
 - Borrar los printf comentados (FINAL)
-
-- Agregar preprocessor flag DEBUG para los printf comentados
-
-- Revisar get_favourite_vec, hay un 40 de los que no pude reemplazar por strlen porque tiraba seg. fault
 
 - Terminar documentacion (FINAL)

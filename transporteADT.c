@@ -56,7 +56,7 @@ tEstacion *getEstacion(tEstacion *estacion, const unsigned int id);
 
 int compararLineas(const tLinea **l1, const tLinea **l2);
 
-void preorderExecute(tEstacion *estacion, void (*execute)(tEstacion *));
+void postorderExecute(tEstacion *estacion, void (*execute)(tEstacion *));
 
 void calcularMax(tEstacion *estacion);
 
@@ -128,7 +128,6 @@ tEstacion * addEstacionRec(tEstacion * estacion, const unsigned int id, const ch
 
 		new_estacion->nombre = smalloc(strlen(nombre_estacion)+1, "Fallo al reservar memoria para almacenar estacion");
 		strcpy(new_estacion->nombre, nombre_estacion);
-		printf("ADD %s %d\n", new_estacion->nombre, new_estacion->pasajeros);
 
 		return new_estacion;
 
@@ -238,7 +237,7 @@ int compararLineas(const tLinea **l1, const tLinea **l2){	return -((*l1)->pasaje
 
 
 void calcularMaxPorLinea(transporteADT trans){
-	 preorderExecute(trans->estaciones, calcularMax);
+	 postorderExecute(trans->estaciones, calcularMax);
 	 //for(int i=0; i<trans->cant_lineas; i++)
 	   	//printf("%s %d\n", trans->lineas_ord_desc[i]->max->nombre, trans->lineas_ord_desc[i]->max->pasajeros);
  }
@@ -251,7 +250,7 @@ void calcularMax(tEstacion *estacion){
 
 
 // Hace un recorrido preorder del arbol binario de estaciones, ejecutando execute sobre cada estación
-void preorderExecute(tEstacion *estacion, void (*execute)(tEstacion *)){
+void postorderExecute(tEstacion *estacion, void (*execute)(tEstacion *)){
 
 	if(estacion==NULL)
 		return;
@@ -262,8 +261,8 @@ void preorderExecute(tEstacion *estacion, void (*execute)(tEstacion *)){
 
 	execute(estacion);
 
-	preorderExecute(estacion->left, execute);
-	preorderExecute(estacion->right, execute);
+	postorderExecute(estacion->left, execute);
+	postorderExecute(estacion->right, execute);
 
 }
 
@@ -274,6 +273,8 @@ void freeTransporte(transporteADT trans){
 
 	for(int i=0; i<trans->cant_lineas; i++)
 		free(trans->lineas_ord_desc[i]);
+
+	//preorderExecute(trans->estaciones, free);
 
 }
 

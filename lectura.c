@@ -5,10 +5,7 @@
 
 void cargarEstaciones(transporteADT trans, const char *archivo_estaciones){
 
-	char *filename = smalloc(strlen(archivo_estaciones)+4, "Fallo reservando memoria en cargarEstaciones");
-	strcpy(filename, "in/"); strcat(filename, archivo_estaciones);
-	FILE * archEstacion = fopen(filename, "r");
-	free(filename);
+	FILE * archEstacion = fopen(archivo_estaciones, "r");
 
 	if (archEstacion == NULL) {
 		printf("No se pudo abrir el archivo de estaciones\n");
@@ -33,10 +30,7 @@ void cargarEstaciones(transporteADT trans, const char *archivo_estaciones){
 
 void cargarMolinetes(transporteADT trans, const char *archivo_molinetes){
 
-	char *filename = smalloc(strlen(archivo_molinetes)+4, "Fallo reservando memoria en cargarMolinetes");
-	strcpy(filename, "in/"); strcat(filename, archivo_molinetes);
-	FILE * archMol = fopen(filename, "r");
-	free(filename);
+	FILE * archMol = fopen(archivo_molinetes, "r");
 
 	if (archMol == NULL) {
 		printf("No se pudo abrir el archivo de molinetes\n");

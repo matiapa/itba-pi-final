@@ -58,11 +58,15 @@ int compararLineas(const tLinea **l1, const tLinea **l2);
 
 void postorderExecute(tEstacion *estacion, void (*execute)(tEstacion *));
 
+void sumaPasajeros(transporteADT trans); 
+
 void calcularMax(tEstacion *estacion);
 
 void freeLinea(tLinea *linea);
 
 void freeEstacion(tEstacion *estacion);
+
+void sumaPasajeros(tEstacion * estacion);
 
 
 //-------------------------------------------------------------------
@@ -193,7 +197,6 @@ void addPasajero(transporteADT trans, unsigned int d, unsigned int m, unsigned i
 	// Incrementa la cantidad de pasajeros de esa estacion, linea y total
 	tEstacion *estacion = getEstacion(trans->estaciones, id);
 	estacion->pasajeros += cant;
-	estacion->linea->pasajeros += cant;
 	trans->pasajeros += cant;
 
 }
@@ -250,6 +253,16 @@ void calcularMax(tEstacion *estacion){
 	 	estacion->linea->max = estacion;
 }
 
+void sumaPasajeros(transporteADT trans, void (*) {
+	postorderExecute(trans->root, (void (*)(tEstacion *))sumaPasajerosLinea);
+
+	tLinea * node = trans->lineas_orden_alpha;
+	while (node != NULL) {
+		trans->pasajeros += node->pasajeros;
+		node = node->next;
+	}
+}
+
 
 // Hace un recorrido preorder del arbol binario de estaciones, ejecutando execute sobre cada estación
 void postorderExecute(tEstacion *estacion, void (*execute)(tEstacion *)){
@@ -291,7 +304,7 @@ void freeEstacion(tEstacion *estacion){
 	free(estacion);
 }
 
-void sumaPasajeros(tEstacion * estacion) {
+void sumaPasajerosLinea(tEstacion * estacion) {
 	estacion->linea->pasajeros += estacion->pasajeros;
 }
 

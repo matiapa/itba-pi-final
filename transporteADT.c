@@ -359,7 +359,7 @@ tEstacion_favorita ** get_favourite_vec(transporteADT trans){
 		estaciones_favs[i]->nombre_linea=smalloc(strlen(lineas->nombre)+1, "Fallo al reservar memoria en get_favourite_vec");
 		strcpy(estaciones_favs[i]->nombre_linea, lineas->nombre);
 
-		estaciones_favs[i]->nombre_estacion=smalloc(40, "Fallo al reservar memoria en get_favourite_vec");
+		estaciones_favs[i]->nombre_estacion=smalloc(strlen(lineas->max->nombre)+1, "Fallo al reservar memoria en get_favourite_vec");
 		strcpy(estaciones_favs[i]->nombre_estacion, lineas->max->nombre);
 
 		estaciones_favs[i]->pasajeros=lineas->max->pasajeros;

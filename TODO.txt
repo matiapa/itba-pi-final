@@ -1,15 +1,7 @@
-cosas que faltan hacer;
+- Revisar los includes y hacecr el def undef (MATI)
 
-hacer funciones de free del TAD
+- Rehacer las sumas para hacerlas no cuando se agrega un pasajero sino cuando ya termino (INÉS)
 
-revisar los includes y hacecr el def undef
+- Borrar los printf comentados (FINAL)
 
-rehacer las sumas para hacerlas no cuando se agrega un pasajero sino cuando ya termino
-
-revisar los comentarios y borrar los prints de testeo (en vez de comentarlos)
-
-terminar documentacion.
-
-
-- Agregar preprocessor flag DEBUG para los printf comentados
-- Revisar get_favourite_vec, hay un 40 de los que no pude reemplazar por strlen porque tiraba seg. fault
+- Terminar documentacion (FINAL)

@@ -1,6 +1,6 @@
+#include "transporteADT.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "transporteADT.h"
 
 
 void query1(transporteADT trans){

@@ -1,7 +1,7 @@
 #include "transporteADT.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+
 
 void cargarEstaciones(transporteADT trans, const char *archivo_estaciones){
 

@@ -1,5 +1,3 @@
-- Revisar los includes y hacecr el def undef (MATI)
-
 - Rehacer las sumas para hacerlas no cuando se agrega un pasajero sino cuando ya termino (INÉS)
 
 - Borrar los printf comentados (FINAL)

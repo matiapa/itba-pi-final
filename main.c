@@ -11,6 +11,8 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 
+	printf("> Procesando datos\n");
+
 	transporteADT trans = newTransporte();
 
 	// Carga de datos
@@ -21,18 +23,18 @@ int main(int argc, char **argv) {
 	ordenarLineasDesc(trans);
 	calcularMaxPorLinea(trans);
 
-	printf("Carga de datos completa \n");
+	printf("> Procesamiento completado\n");
 
 
 	query1(trans);
-	printf("Query1 terminado \n");
+	printf("> Query 1 terminado \n");
 
 	query2(trans);
-	printf("Query2 terminado \n");
+	printf("> Query 2 terminado \n");
 
 	query3(trans);
-	printf("Query3 terminado \n");
+	printf("> Query 3 terminado \n");
 
 	query4(trans);
-	printf("Query4 terminado \n");
+	printf("> Query 4 terminado \n");
 }

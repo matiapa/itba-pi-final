@@ -14,9 +14,9 @@ typedef struct tLinea_con_pasajeros{
 //estructura de intercambio entre el TAD y el fron end del query 3.
 
 typedef struct tEstacion_favorita{
-	char * nombre_estacion;
 	char * nombre_linea;
 	long int pasajeros;
+	char * nombre_estacion;
 }tEstacion_favorita;
 
 // estructura de intercambio entre el TAD y el front end del query 4.
@@ -38,7 +38,7 @@ int get_cant_lineas(const transporteADT trans);
 
 void get_linea(char ** nombre_linea, long int * pasajeros, const int pos, const transporteADT trans);
 
-void get_pasajeros_dia(long int * dia,long int * noche, const int i, const transporteADT trans);
+void get_pasajeros_por_dia(long int * dia,long int * noche, const int i, const transporteADT trans);
 
 tLinea_con_pasajeros ** get_pasajeros_por_linea(const transporteADT trans);
 

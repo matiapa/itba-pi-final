@@ -65,10 +65,20 @@ transporteADT.c
 |   |
 |   |-> compararLineas
 |
-|->
+|-> calcularMaxPorLinea
+|   |
+|   |-> preorderExecute
+|   |-> calcularMax
 |
-|->
 |
-|->
+|-> get_cant_lineas
 |
-|->
+|-> get_linea
+|
+|-> get_pasajeros_por_dia
+|
+|-> get_pasajeros_por_linea
+|
+|-> get_total_pasajeros
+|
+|-> get_favourite_vec

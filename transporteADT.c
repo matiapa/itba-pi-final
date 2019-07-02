@@ -291,6 +291,10 @@ void freeEstacion(tEstacion *estacion){
 	free(estacion);
 }
 
+void sumaPasajeros(tEstacion * estacion) {
+	estacion->linea->pasajeros += estacion->pasajeros;
+}
+
 
 //-----------------------------------------------------
 //     FUNCIONES DEL TAD - OBTENCION DE DATOS

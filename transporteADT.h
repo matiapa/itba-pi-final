@@ -34,8 +34,6 @@ void ordenarLineasDesc(transporteADT trans);
 
 void calcularMaxPorLinea(transporteADT trans);
 
-void sumaPasajeros(transporteADT trans);
-
 void freeTransporte(transporteADT trans);
 
 

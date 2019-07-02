@@ -2,4 +2,8 @@
 
 - Borrar los printf comentados (FINAL)
 
+- Agregar preprocessor flag DEBUG para los printf comentados
+
+- Revisar get_favourite_vec, hay un 40 de los que no pude reemplazar por strlen porque tiraba seg. fault
+
 - Terminar documentacion (FINAL)

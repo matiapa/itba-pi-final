@@ -13,6 +13,12 @@ void cargarEstaciones(transporteADT trans, const char *archivo_estaciones){
 		exit(1);
 	}
 
+	// Si el primer caracter es una f probablemente corresponda al encabezado de molinetes.csv
+	if(fgetc(archEstacion) == 'f'){
+		printf("Error: Probablemente haya ingresado los archivos en el orden incorrecto. Uso: ./transporte archivo_estaciones archivo_molinetes\n");
+		exit(1);
+	}
+
 	// Se saltea el encabezado
 	while (fgetc(archEstacion) != '\n');
 

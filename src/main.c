@@ -7,29 +7,38 @@
 int main(int argc, char **argv) {
 
 	if(argc!=3){
-		printf("Uso: ./transporte archivo_estaciones archivo_molinetes");
+		printf("Uso: ./transporte archivo_estaciones archivo_molinetes\n");
 		return 1;
 	}
 
-	printf("> Procesando datos\n");
-
 	transporteADT trans = newTransporte();
 
+
 	// Carga de datos
+
+	printf("> Cargando datos\n");
+
 	cargarEstaciones(trans, argv[1]);
 	if(get_cant_lineas(trans)==0){
-		printf("No se agregó ninguna estacion\n");
+		printf("No se agrego ninguna estacion\n");
 		freeTransporte(trans);
 		return 1;
 	}
 
 	cargarMolinetes(trans, argv[2]);
 
+	printf("> Carga completada\n");
+
+
 	// Procesamiento de datos
+
 	ordenarLineasDesc(trans);
 	calcularMaxPorLinea(trans);
 
 	printf("> Procesamiento completado\n");
+
+
+	// Ejecucion de consultas
 
 	query1(trans);
 	printf("> Query 1 terminado \n");
@@ -42,6 +51,9 @@ int main(int argc, char **argv) {
 
 	query4(trans);
 	printf("> Query 4 terminado \n");
+
+
+	// Liberacion de memoria
 
 	freeTransporte(trans);
 	printf("> Completado\n");

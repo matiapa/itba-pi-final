@@ -16,7 +16,7 @@ void query1(transporteADT trans){
 		exit(1);
 	}
 
-	fprintf(fptr,"Línea,Pasajeros \n");
+	fprintf(fptr,"Linea,Pasajeros \n");
 
   // Agregar linea por linea los datos al archivo
 
@@ -46,7 +46,7 @@ void query2(transporteADT trans){
     exit(1);
   }
 
-	fprintf(fptr,"Día,Diurnos,Nocturnos,Total \n");
+	fprintf(fptr,"Dia,Diurnos,Nocturnos,Total \n");
 
   // Agregar cada linea al archivo
 
@@ -76,7 +76,7 @@ void query3(transporteADT trans){
     exit(1);
   }
 
-	fprintf(fptr,"Línea,Porcentaje \n");
+	fprintf(fptr,"Linea,Porcentaje \n");
 
   // Imprime las lineas al archivo
 
@@ -114,11 +114,11 @@ void query4(transporteADT trans){
   // Genera el archivo
 	FILE *fptr=fopen("query4.csv","w");
   if (fptr == NULL) {
-    printf("No se pudo crear el archivo query3.csv\n");
+    printf("No se pudo crear el archivo query4.csv\n");
     exit(1);
   }
 
-	fprintf(fptr,"Estación,Línea,Pasajeros \n");
+	fprintf(fptr,"Estacion,Linea,Pasajeros \n");
 
 	for (int i=0;i<cant_lineas;i++){
 

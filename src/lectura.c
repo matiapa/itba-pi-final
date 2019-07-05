@@ -16,7 +16,7 @@ void cargarEstaciones(transporteADT trans, const char *archivo_estaciones){
 	// Verifica que este el encabezado, y que no corresponda al archivo de molinetes
 	char s1[10],s2[10],s3[10];
 	if(fscanf(archEstacion,"%9[a-z],%9[a-z],%9[a-z]\n",s1,s2,s3)!=3 || strcmp(s1,"fecha")==0){
-		printf("Error: Encabezado faltante o invalido. Recuerde el orden de los archivos: ./transporte archivo_estaciones archivo_molinetes\n");
+		printf("Encabezado faltante o invalido. Recuerde el orden de los archivos: ./transporte archivo_estaciones archivo_molinetes\n");
 		exit(1);
 	}
 

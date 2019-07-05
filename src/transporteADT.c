@@ -28,15 +28,15 @@ typedef struct tEstacion {
 
 typedef struct transporteCDT {
 
-	tLinea * lineas_ord_alpha;			// Lista de líneas en orden alfabético
-	tLinea ** lineas_ord_desc;			// Vector de punteros a líneas en orden descendente (por pasajeros)
+	tLinea * lineas_ord_alpha;			// Lista de lineas en orden alfabetico
+	tLinea ** lineas_ord_desc;			// Vector de punteros a lineas en orden descendente (por pasajeros)
 
 	int cant_lineas;
 	tEstacion * estaciones; 				// Arbol binario con todas las estaciones
 	unsigned int cant_estaciones;
 
 	long int pasajeros;					// Total de pasajeros
-	unsigned int vec_diurno[DIAS_SEMANA];			// Cantidad de pasajeros por día de la semana en período diurno, la primer posición es domingo
+	unsigned int vec_diurno[DIAS_SEMANA];			// Cantidad de pasajeros por dia de la semana en periodo diurno, la primer posicion es domingo
 	unsigned int vec_nocturno[DIAS_SEMANA];
 
 }transporteCDT;
@@ -113,8 +113,10 @@ void addEstacion(transporteADT trans, const unsigned int id, const char * nombre
 	trans->estaciones = addEstacionRec(trans->estaciones, id, nombre_estacion, dir_linea);
 	trans->cant_estaciones += 1;
 
-	tEstacion * dir_est = getEstacion(trans->estaciones, id);
-	printf("Added: %d, %s, %s\n\n", id, dir_est->linea->nombre, dir_est->nombre);
+	#if DEBUG
+		tEstacion * dir_est = getEstacion(trans->estaciones, id);
+		printf("Estacion agregada: %d, %s, %s\n\n", id, dir_est->linea->nombre, dir_est->nombre);
+	#endif
 
 }
 
@@ -203,7 +205,7 @@ void addPasajero(transporteADT trans, unsigned int d, unsigned int m, unsigned i
 tEstacion *getEstacion(tEstacion *estacion, const unsigned int id){
 
 	if(estacion == NULL){
-		printf("La estación %d no fue encontrada, abortando.\n", id);
+		printf("La estacion %d no fue encontrada, abortando.\n", id);
 		exit(1);
 	}
 
@@ -220,7 +222,7 @@ tEstacion *getEstacion(tEstacion *estacion, const unsigned int id){
 
 void ordenarLineasDesc(transporteADT trans){
 
-	// Primero, completa el vector con los punteros a las líneas, que están en la lista
+	// Primero, completa el vector con los punteros a las lineas, que estan en la lista
 	trans->lineas_ord_desc = smalloc(trans->cant_lineas*sizeof(tLinea *), "Fallo al reservar memoria para crear vector de lineas descendente.\n");
 
 	trans->lineas_ord_desc[0] = trans->lineas_ord_alpha;
@@ -230,8 +232,11 @@ void ordenarLineasDesc(transporteADT trans){
 	// Luego, aplica quicksort sobre el vector
 	qsort(trans->lineas_ord_desc, trans->cant_lineas, sizeof(tLinea *), (int (*)(const void *, const void *)) compararLineas);
 
-	// for(int i=1; i<trans->cant_lineas; i++)
-	// 	printf("%s %d\n", trans->lineas_ord_desc[i]->nombre, trans->lineas_ord_desc[i]->pasajeros);
+	#if DEBUG
+		printf("\nOrden descendente: ");
+		for(int i=1; i<trans->cant_lineas; i++)
+		 	printf("%s: %d, ", trans->lineas_ord_desc[i]->nombre, trans->lineas_ord_desc[i]->pasajeros);
+	#endif
 
 }
 
@@ -241,8 +246,12 @@ int compararLineas(const tLinea **l1, const tLinea **l2){	return -((*l1)->pasaje
 
 void calcularMaxPorLinea(transporteADT trans){
 	 postorderExecute(trans->estaciones, calcularMax);
-	 //for(int i=0; i<trans->cant_lineas; i++)
-	   	//printf("%s %d\n", trans->lineas_ord_desc[i]->max->nombre, trans->lineas_ord_desc[i]->max->pasajeros);
+
+	 #if DEBUG
+	 printf("\nMaximos por linea: ")
+	 for(int i=0; i<trans->cant_lineas; i++)
+	   	printf("%s: %d, ", trans->lineas_ord_desc[i]->max->nombre, trans->lineas_ord_desc[i]->max->pasajeros);
+	 #endif
  }
 
 
@@ -252,15 +261,11 @@ void calcularMax(tEstacion *estacion){
 }
 
 
-// Hace un recorrido preorder del arbol binario de estaciones, ejecutando execute sobre cada estación
+// Hace un recorrido preorder del arbol binario de estaciones, ejecutando execute sobre cada estacion
 void postorderExecute(tEstacion *estacion, void (*execute)(tEstacion *)){
 
 	if(estacion==NULL)
 		return;
-
-	#if DEBUG
-		printf("E%d " estacion->id);
-	#endif
 
 	postorderExecute(estacion->left, execute);
 	postorderExecute(estacion->right, execute);

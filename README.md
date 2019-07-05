@@ -22,26 +22,34 @@ Query 4: Estación con más pasajeros por línea. Imprime estación, línea, pas
 
 ## TAD
 
-Transporte
-- tlinea *lineas_ord_alpha       // Este se crea en tiempo de lectura de archivos
-- tlinea *lineas_ord_desc        // Este se crea post-lectura de archivos
-- testacion *estaciones
-- int cant_estaciones
-- int[7] pas_sem_diurnos         // Dom->Sab
-- int[7] pas_sem_diarios     
-- int pasajeros_totales
+### transporteCDT
+-	tLinea * lineas_ord_alpha;								// Lista de lineas en orden alfabetico
+-	tLinea ** lineas_ord_desc;								// Vector de punteros a lineas en orden descendente (por pasajeros)
 
-Testacion
-- int id
-- char *nombre
-- tlinea *linea
-- int pasajeros_totales
+-	int cant_lineas;
+-	tEstacion * estaciones; 									// Arbol binario de busqueda con todas las estaciones
+-	unsigned int cant_estaciones;
 
-Tlinea
-- char *nombre
-- int pasajeros_totales
-- tstation *max_estacion
-- tlinea *next_linea
+-	long int pasajeros;												// Total de pasajeros
+-	unsigned int vec_diurno[DIAS_SEMANA];			// Cantidad de pasajeros por dia de la semana en periodo diurno, la primer posicion es domingo
+-	unsigned int vec_nocturno[DIAS_SEMANA];
+
+
+### tLinea
+- char * nombre;
+- long int pasajeros;												// Total de pasajeros en la linea
+-	struct tEstacion * max; 									// Puntero a la estacion con mas pasajeros
+-	struct tLinea * next;											// Puntero a la proxima linea en la lista de lineas
+
+
+### tEstacion
+- unsigned int id;
+-	int pasajeros;														// Total de pasajeros en la estacion
+-	char * nombre;
+-	tLinea * linea; 														// Puntero a la linea que pertenece
+-	struct tEstacion * left;									// Puntero al hijo izquierdo en el arbol binario de busqueda
+-	struct tEstacion * right;
+
 
 
 ## Mapa de Funciones

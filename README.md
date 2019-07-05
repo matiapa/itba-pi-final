@@ -20,10 +20,10 @@ Query 4: Estación con más pasajeros por línea. Imprime estación, línea, pas
 
 
 
-# Solucion
+# Solucion desarrollada
 
 
-## TAD Propuesto
+## TAD
 
 Transporte
 - tlinea *lineas_ord_alpha       // Este se crea en tiempo de lectura de archivos
@@ -47,26 +47,82 @@ Tlinea
 - tlinea *next_linea
 
 
-## Procesamiento de datos
+## Mapa de Funciones
 
-Lectura de estaciones.csv:
-- Creación de líneas (ord. alf) y estaciones (s/ord.)
+FRONTEND: main.c, lectura.c, queries.c
+BACKEND: transporteADT.c
 
-Lectura de molinetes.csv:
-- transporte->estaciones[estacion_id]->pasajeros_totales
-- transporte->pas_sem_diurnos/nocturnos
+main.c
 
-Post-lecturas:
-- Escribir en transporte[lineas_descendente] el orden descendente por pasajeros de líneas
-- Recorrer todas las estaciones y actualizaar el transporte->linea->max_estacion
+- main
+ - cargarEstaciones (lectura.c)
+ - cargarMolinetes (lectura.c)
+ - ordenarLineasDesc (transporteADT.c)
+ - calcularMaxPorLinea (transporteADT.c)
+ - query1 (queries.c)
+ - query2 (queries.c)
+ - query3 (queries.c)
+ - query4 (queries.c)
 
 
-Atención de queries
------------------------
-Query 1:
+lectura.c
 
-Query 2:
+- cargarEstaciones
+ - addEstacion (transporteADT.c)
+- cargarMolinetes
+ - addPasajero (transporteADT.c)
 
-Query 3:
 
-Query 4:
+queries.c
+
+- query1
+ - get_cant_lineas  (transporteADT.c)
+ - get_linea (transporteADT.c)
+
+- query2
+ - get_pasajeros_dia (transporteADT.c)
+
+- query3
+ -  get_pasajeros_por_linea (transporteADT.c)
+ - get_total_pasajeros (transporteADT.c)
+ - get_cant_lineas (transporteADT.c)
+
+- query4
+ - get_favourite_vec (transporteADT.c)
+ - get_cant_lineas (transporteADT.c)
+
+
+transporteADT.c
+
+- newTransporte
+
+- addEstacion
+ - addEstacionRec
+ - addLinea
+
+- addPasajero
+ - getEstacion
+
+- ordenarLineasDesc
+ - compararLineas
+
+- calcularMaxPorLinea
+ - postorderExecute
+ - calcularMax
+
+- freeTransporte
+ - freeEstacion
+ - freeLinea
+ - postorderExecute
+
+- get_cant_lineas
+
+- get_linea
+
+- get_pasajeros_por_dia
+
+- get_pasajeros_por_linea
+
+- get_total_pasajeros
+
+- get_favourite_vec

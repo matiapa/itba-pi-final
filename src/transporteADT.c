@@ -115,7 +115,7 @@ void addEstacion(transporteADT trans, const unsigned int id, const char * nombre
 
 	#if DEBUG
 		tEstacion * dir_est = getEstacion(trans->estaciones, id);
-		printf("Estacion agregada: %d, %s, %s\n\n", id, dir_est->linea->nombre, dir_est->nombre);
+		printf("\nEstacion agregada: %d, %s, %s", id, dir_est->linea->nombre, dir_est->nombre);
 	#endif
 
 }
@@ -205,7 +205,7 @@ void addPasajero(transporteADT trans, unsigned int d, unsigned int m, unsigned i
 tEstacion *getEstacion(tEstacion *estacion, const unsigned int id){
 
 	if(estacion == NULL){
-		printf("La estacion %d no fue encontrada, abortando.\n", id);
+		printf("\nLa estacion %d no fue encontrada, abortando.\n", id);
 		exit(1);
 	}
 
@@ -233,7 +233,7 @@ void ordenarLineasDesc(transporteADT trans){
 	qsort(trans->lineas_ord_desc, trans->cant_lineas, sizeof(tLinea *), (int (*)(const void *, const void *)) compararLineas);
 
 	#if DEBUG
-		printf("\nOrden descendente: ");
+		printf("\n\nOrden descendente: ");
 		for(int i=1; i<trans->cant_lineas; i++)
 		 	printf("%s: %d, ", trans->lineas_ord_desc[i]->nombre, trans->lineas_ord_desc[i]->pasajeros);
 	#endif
@@ -248,9 +248,10 @@ void calcularMaxPorLinea(transporteADT trans){
 	 postorderExecute(trans->estaciones, calcularMax);
 
 	 #if DEBUG
-	 printf("\nMaximos por linea: ")
+	 printf("\n\nMaximos por linea: ");
 	 for(int i=0; i<trans->cant_lineas; i++)
 	   	printf("%s: %d, ", trans->lineas_ord_desc[i]->max->nombre, trans->lineas_ord_desc[i]->max->pasajeros);
+	 printf("\n\n");
 	 #endif
  }
 

@@ -2,7 +2,7 @@ COMPILER = gcc -pedantic -std=c99 -Wall -fsanitize=address
 OUT = transporte.out
 
 all:
-	$(COMPILER) src/main.c src/lectura.c src/queries.c src/transporteADT.c -o transporte
+	$(COMPILER) src/main.c src/lectura.c src/queries.c src/transporteADT.c -o $(OUT)
 
 debug: COMPILER += -DDEBUG=1
 debug: all

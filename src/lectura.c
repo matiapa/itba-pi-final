@@ -13,22 +13,20 @@ void cargarEstaciones(transporteADT trans, const char *archivo_estaciones){
 		exit(1);
 	}
 
-	// Si el primer caracter es una f probablemente corresponda al encabezado de molinetes.csv
-	if(fgetc(archEstacion) == 'f'){
-		printf("Error: Probablemente haya ingresado los archivos en el orden incorrecto. Uso: ./transporte archivo_estaciones archivo_molinetes\n");
+	// Verifica que este el encabezado, y que no corresponda al archivo de molinetes
+	char s1[10],s2[10],s3[10];
+	if(fscanf(archEstacion,"%9[a-z],%9[a-z],%9[a-z]\n",s1,s2,s3)!=3 || strcmp(s1,"fecha")==0){
+		printf("Error: Encabezado faltante o invalido. Recuerde el orden de los archivos: ./transporte archivo_estaciones archivo_molinetes\n");
 		exit(1);
 	}
 
-	// Se saltea el encabezado
-	while (fgetc(archEstacion) != '\n');
-
-	/* Lectura de estaciones */
-	int id; char linea[40], estacion[40];
-
-	while (fscanf(archEstacion, "%d,%30[^,],%30[^,\n]", &id, linea, estacion) == 3) {
-		//printf("Adding %d, %s, %s\n", id, linea, estacion);
-		addEstacion(trans, id, linea, estacion);
-	}
+	// Lectura de estaciones
+	int id; char linea[40], estacion[40], c;
+	do{
+		if(fscanf(archEstacion, "%d,%30[^,],%30[^,\n]", &id, linea, estacion) == 3)
+			addEstacion(trans, id, linea, estacion);
+		c=fgetc(archEstacion);
+	}while(c != EOF);
 
 	fclose(archEstacion);
 
@@ -44,18 +42,14 @@ void cargarMolinetes(transporteADT trans, const char *archivo_molinetes){
 		exit(1);
 	}
 
-	// Se saltea el encabezado
-	while (fgetc(archMol) != '\n');
-
-	/* Lectura de molinetes */
-	unsigned int hora, min, hrs, cant, d, m, y, id;
-
 	// Solo se leera la hora de finalizacion del intervalo, la de inicio no es necesaria
-	while (fscanf(archMol, "%u/%u/%u,%*[^,],%u:%u,%u,%u", &d, &m, &y, &hrs, &min, &id, &cant) == 7) {
-		hora = hrs*100 + min;
-		//printf("Adding %d/%d/%d %d:%d - %d: %d\n", d, m, y, hrs, min, id, cant);
-		addPasajero(trans, d, m, y, hora, id, cant);
+	unsigned int min, hrs, cant, d, m, y, id; char c;
+	do{
+		if(fscanf(archMol, "%u/%u/%u,%*[^,],%u:%u,%u,%u", &d, &m, &y, &hrs, &min, &id, &cant) == 7)
+			addPasajero(trans, d, m, y, hrs*100+min, id, cant);
+		c=fgetc(archMol);
 	}
+	while(c != EOF);
 
 	fclose(archMol);
 

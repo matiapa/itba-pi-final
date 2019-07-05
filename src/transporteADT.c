@@ -113,8 +113,8 @@ void addEstacion(transporteADT trans, const unsigned int id, const char * nombre
 	trans->estaciones = addEstacionRec(trans->estaciones, id, nombre_estacion, dir_linea);
 	trans->cant_estaciones += 1;
 
-	// tEstacion * dir_est = getEstacion(trans->estaciones, id);
-	// printf("Added: %d, %s, %s\n\n", id, dir_est->linea->nombre, dir_est->nombre);
+	tEstacion * dir_est = getEstacion(trans->estaciones, id);
+	printf("Added: %d, %s, %s\n\n", id, dir_est->linea->nombre, dir_est->nombre);
 
 }
 

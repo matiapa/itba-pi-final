@@ -17,16 +17,19 @@ int main(int argc, char **argv) {
 
 	// Carga de datos
 	cargarEstaciones(trans, argv[1]);
+	if(get_cant_lineas(trans)==0){
+		printf("No se agregó ninguna estacion\n");
+		freeTransporte(trans);
+		return 1;
+	}
+
 	cargarMolinetes(trans, argv[2]);
 
 	// Procesamiento de datos
 	ordenarLineasDesc(trans);
 	calcularMaxPorLinea(trans);
-	
-
 
 	printf("> Procesamiento completado\n");
-
 
 	query1(trans);
 	printf("> Query 1 terminado \n");

@@ -6,3 +6,6 @@ all:
 
 debug: COMPILER += -DDEBUG=1
 debug: all
+
+ns: COMPILER = gcc -pedantic -std=c99 -Wall
+ns: all

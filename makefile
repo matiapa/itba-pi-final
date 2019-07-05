@@ -1,5 +1,5 @@
 COMPILER = gcc -pedantic -std=c99 -Wall -fsanitize=address
-OUT = transporte
+OUT = transporte.out
 
 all:
 	$(COMPILER) src/main.c src/lectura.c src/queries.c src/transporteADT.c -o transporte

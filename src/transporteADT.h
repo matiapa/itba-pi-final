@@ -39,7 +39,7 @@ void freeTransporte(transporteADT trans);
 
 int get_cant_lineas(const transporteADT trans);
 
-void get_linea(char ** nombre_linea, long int * pasajeros, const int pos, const transporteADT trans);
+void get_linea_desc(char ** nombre_linea, long int * pasajeros, const int pos, const transporteADT trans);
 
 void get_pasajeros_por_dia(long int * dia,long int * noche, const int i, const transporteADT trans);
 

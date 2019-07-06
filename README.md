@@ -123,7 +123,7 @@ BACKEND: transporteADT.c
 
 - get_cant_lineas
 
-- get_linea
+- get_linea_desc
 
 - get_pasajeros_por_dia
 

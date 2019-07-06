@@ -22,7 +22,7 @@ void query1(transporteADT trans){
 
 	for (int i=0;i<cant_lineas;i++){
 		char * nombre_linea;
-    get_linea(&nombre_linea, &pasajeros,i,trans);
+    get_linea_desc(&nombre_linea, &pasajeros,i,trans);
 		/* si la cantidad de pasajero es 0 entonces no la imprime */
 		if (pasajeros >= 1) {
 			fprintf(fptr,"%s,%ld\n", nombre_linea, pasajeros);

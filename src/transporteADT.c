@@ -11,31 +11,32 @@
 
 typedef struct tLinea {
 	char * nombre;
-	long int pasajeros;			// Total de pasajeros
-	struct tEstacion * max; 			// Puntero a la estacion con mas pasajeros
-	struct tLinea * next;
+	long int pasajeros;												// Total de pasajeros en la linea
+	struct tEstacion * max; 									// Puntero a la estacion con mas pasajeros
+	struct tLinea * next;											// Puntero a la proxima linea en la lista de lineas
 } tLinea;
+
 
 typedef struct tEstacion {
 	unsigned int id;
-	int pasajeros;		// Total de pasajeros
+	int pasajeros;														// Total de pasajeros en la estacion
 	char *nombre;
-	tLinea *linea; 		// Puntero a la linea que pertenece
-	struct tEstacion * left;
+	tLinea *linea; 														// Puntero a la linea que pertenece
+	struct tEstacion * left;									// Puntero al hijo izquierdo en el arbol binario de busqueda
 	struct tEstacion * right;
 } tEstacion;
 
 
 typedef struct transporteCDT {
 
-	tLinea * lineas_ord_alpha;			// Lista de lineas en orden alfabetico
-	tLinea ** lineas_ord_desc;			// Vector de punteros a lineas en orden descendente (por pasajeros)
+	tLinea * lineas_ord_alpha;								// Lista de lineas en orden alfabetico
+	tLinea ** lineas_ord_desc;								// Vector de punteros a lineas en orden descendente (por pasajeros)
 
 	int cant_lineas;
-	tEstacion * estaciones; 				// Arbol binario con todas las estaciones
+	tEstacion * estaciones; 									// Arbol binario de busqueda con todas las estaciones
 	unsigned int cant_estaciones;
 
-	long int pasajeros;					// Total de pasajeros
+	long int pasajeros;												// Total de pasajeros
 	unsigned int vec_diurno[DIAS_SEMANA];			// Cantidad de pasajeros por dia de la semana en periodo diurno, la primer posicion es domingo
 	unsigned int vec_nocturno[DIAS_SEMANA];
 
@@ -241,7 +242,15 @@ void ordenarLineasDesc(transporteADT trans){
 }
 
 
-int compararLineas(const tLinea **l1, const tLinea **l2){	return -((*l1)->pasajeros - (*l2)->pasajeros); }
+int compararLineas(const tLinea **l1, const tLinea **l2){
+
+	int dif_pas = (*l2)->pasajeros - (*l1)->pasajeros;
+	if(dif_pas!=0)
+		return dif_pas;
+
+	return strcmp((*l1)->nombre, (*l2)->nombre);
+
+}
 
 
 void calcularMaxPorLinea(transporteADT trans){
@@ -309,7 +318,7 @@ void freeEstacion(tEstacion *estacion){
 int get_cant_lineas(const transporteADT trans){return trans->cant_lineas; }
 
 
-void get_linea(char ** nombre_linea, long int * pasajeros, const int pos, const transporteADT trans){
+void get_linea_desc(char ** nombre_linea, long int * pasajeros, const int pos, const transporteADT trans){
 
 	// Devuelve la cantidad de pasajeros y el nombre de la linea de el i'esimo elemento del vector de lineas en orden descendente
 	*nombre_linea = smalloc(strlen(trans->lineas_ord_desc[pos]->nombre)+1, "Fallo al reservar memoria en get_linea()\n");

@@ -371,8 +371,7 @@ tEstacion_favorita ** get_favourite_vec(transporteADT trans){
 	tEstacion_favorita ** estaciones_favs=smalloc(sizeof(tEstacion_favorita *)*cant_lineas, "Fallo al reservar memoria en get_favourite_vec");
 
 	// Transcribe los datos de la estructura del TAD al la nueva estructura generada conocida publicamente.
-	for(int i=0;i<cant_lineas;i++)
-	{
+	for(int i=0;i<cant_lineas;i++){
 		estaciones_favs[i]=smalloc(sizeof(tEstacion_favorita), "Fallo al reservar memoria en get_favourite_vec");
 
 		estaciones_favs[i]->nombre_linea=smalloc(strlen(lineas->nombre)+1, "Fallo al reservar memoria en get_favourite_vec");

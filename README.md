@@ -1,3 +1,13 @@
+# Uso
+
+```
+make
+./transporte ARCHIVO_ESTACIONES ARCHIVO_MOLINETES
+```
+
+Los archivos con los resultados de los queries se generaran en la carpeta en la que se encuentra el ejecutable.
+
+
 # Consigna
 ## Información disponible
 

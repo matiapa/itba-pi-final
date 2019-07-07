@@ -4,7 +4,7 @@
 #include <string.h>
 
 #define MAX_NOMBRE 40
-#define MAX_NOMBRE_STR "40"
+#define MAX_NOMBRE_STR "39"
 
 
 void cargarEstaciones(transporteADT trans, const char *archivo_estaciones){

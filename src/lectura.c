@@ -3,8 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_NOMBRE 40
-#define MAX_NOMBRE_STR "39"
+#define MAX_LINEA_CSV 200
 
 
 void cargarEstaciones(transporteADT trans, const char *archivo_estaciones){
@@ -24,11 +23,18 @@ void cargarEstaciones(transporteADT trans, const char *archivo_estaciones){
 	}
 
 	// Lectura de estaciones
-	int id; char linea[MAX_NOMBRE], estacion[MAX_NOMBRE], c;
+	char c;
 	do{
-		if(fscanf(archEstacion, "%d,%"MAX_NOMBRE_STR"[^,],%"MAX_NOMBRE_STR"[^,\n]", &id, linea, estacion) == 3)
-			addEstacion(trans, id, linea, estacion);
-		c=fgetc(archEstacion);
+		char str[MAX_LINEA_CSV]={0};
+		for(int i=0; (c=fgetc(archEstacion))!='\n' && c!=EOF && i<MAX_LINEA_CSV; i++)
+			str[i]=c;
+
+		const char d[2] = ",";
+		char *id=strtok(str, d); char *linea=strtok(NULL, d); char * estacion=strtok(NULL, d);
+
+		if(id!=NULL && linea!=NULL && estacion!=NULL)
+			addEstacion(trans, atoi(id), linea, estacion);
+
 	}while(c != EOF);
 
 	fclose(archEstacion);

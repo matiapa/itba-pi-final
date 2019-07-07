@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MAX_NOMBRE 40
+#define MAX_NOMBRE_STR "40"
+
 
 void cargarEstaciones(transporteADT trans, const char *archivo_estaciones){
 
@@ -21,9 +24,9 @@ void cargarEstaciones(transporteADT trans, const char *archivo_estaciones){
 	}
 
 	// Lectura de estaciones
-	int id; char linea[40], estacion[40], c;
+	int id; char linea[MAX_NOMBRE], estacion[MAX_NOMBRE], c;
 	do{
-		if(fscanf(archEstacion, "%d,%30[^,],%30[^,\n]", &id, linea, estacion) == 3)
+		if(fscanf(archEstacion, "%d,%"MAX_NOMBRE_STR"[^,],%"MAX_NOMBRE_STR"[^,\n]", &id, linea, estacion) == 3)
 			addEstacion(trans, id, linea, estacion);
 		c=fgetc(archEstacion);
 	}while(c != EOF);
@@ -42,7 +45,7 @@ void cargarMolinetes(transporteADT trans, const char *archivo_molinetes){
 		exit(1);
 	}
 
-	// Solo se leera la hora de finalizacion del intervalo, la de inicio no es necesaria
+	// Solo se leera la hora de finalizacion del intervalo, que es la utilizada para determinar el periodo (diurno/nocturno) del viaje
 	unsigned int min, hrs, cant, d, m, y, id; char c;
 	do{
 		if(fscanf(archMol, "%u/%u/%u,%*[^,],%u:%u,%u,%u", &d, &m, &y, &hrs, &min, &id, &cant) == 7)

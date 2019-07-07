@@ -22,8 +22,6 @@ typedef struct tEstacion_favorita{
 }tEstacion_favorita;
 
 
-void *smalloc(int bytes, char *err_msg);
-
 transporteADT newTransporte();
 
 void addEstacion(transporteADT trans, const unsigned int id, const char * nombre_linea, const char * nombre_estacion);
@@ -48,5 +46,10 @@ tLinea_con_pasajeros ** get_pasajeros_por_linea(const transporteADT trans);
 long int get_total_pasajeros(const transporteADT trans);
 
 tEstacion_favorita ** get_favourite_vec(const transporteADT trans);
+
+
+void *smalloc(int bytes, char *err_msg);
+
+void *scalloc(int cant, int bytes, char *err_msg);
 
 #endif

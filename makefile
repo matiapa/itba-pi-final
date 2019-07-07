@@ -1,4 +1,4 @@
-COMPILER = gcc -pedantic -std=c99 -Wall -fsanitize=address
+COMPILER = gcc -pedantic -std=c99 -Wall -fsanitize=address -g
 OUT = transporte
 
 all:

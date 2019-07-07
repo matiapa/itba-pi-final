@@ -4,6 +4,8 @@
 #include <string.h>
 #include <errno.h>
 
+#define DIURNO_INI 0600
+#define DIURNO_FIN 1700
 
 //------------------------------------
 //     DEFINICION DE STRUCTS
@@ -70,33 +72,6 @@ void freeEstacion(tEstacion *estacion);
 //-------------------------------------------------------------------
 //     FUNCIONES DEL TAD - ALMACENAMIENTO Y PROCESAMIENTO
 //-------------------------------------------------------------------
-
-
-void *smalloc(int bytes, char *err_msg){
-
-	void *address = malloc(bytes);
-
-	if(address==NULL || errno==ENOMEM){
-		printf("%s", err_msg);
-		exit(1);
-	}
-
-	return address;
-
-}
-
-void *scalloc(int cant, int bytes, char *err_msg){
-
-	void *address = calloc(cant, bytes);
-
-	if(address==NULL || errno==ENOMEM){
-		printf("%s", err_msg);
-		exit(1);
-	}
-
-	return address;
-
-}
 
 
 transporteADT newTransporte(){
@@ -189,8 +164,8 @@ void addPasajero(transporteADT trans, unsigned int d, unsigned int m, unsigned i
 	// Formula obtenida de https://stackoverflow.com/questions/6054016/c-program-to-find-day-of-week-given-date
 	int weekday  = (d += m < 3 ? y-- : y - 2, 23*m/9 + d + 4 + y/4- y/100 + y/400)%7;
 
-	// Si la hora esta entre las 6:00 y las 17:00 lo suma al vector diurno, sino al nocturno
-	if (hora > 0600 && hora <= 1700)
+	// Se fija si agregar los pasajeros al periodo diurno o nocturno
+	if (hora > DIURNO_INI && hora <= DIURNO_FIN)
 		trans->vec_diurno[weekday] += cant;
 	else
 		trans->vec_nocturno[weekday] += cant;
@@ -385,4 +360,39 @@ tEstacion_favorita ** get_favourite_vec(transporteADT trans){
 	}
 
 	return estaciones_favs;
+}
+
+
+
+
+//---------------------------------------
+//     FUNCIONES AUXILIARES
+//---------------------------------------
+
+// Version de malloc que se encarga de posibles errores
+void *smalloc(int bytes, char *err_msg){
+
+	void *address = malloc(bytes);
+
+	if(address==NULL || errno==ENOMEM){
+		printf("%s", err_msg);
+		exit(1);
+	}
+
+	return address;
+
+}
+
+// Version de calloc que se encarga de posibles errores
+void *scalloc(int cant, int bytes, char *err_msg){
+
+	void *address = calloc(cant, bytes);
+
+	if(address==NULL || errno==ENOMEM){
+		printf("%s", err_msg);
+		exit(1);
+	}
+
+	return address;
+
 }
